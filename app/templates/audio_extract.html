@@ -1,0 +1,1051 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Video Audio Cleaning - NoProfanity</title>
+    <link
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"
+      rel="stylesheet"
+    />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      :root {
+        --bg-primary: #000000;
+        --bg-secondary: #0a0a0a;
+        --bg-accent: #1a1a1a;
+        --text-primary: #ffffff;
+        --text-secondary: #cccccc;
+        --text-accent: #d4af37;
+        --border-color: #000000;
+        --shadow: 0 4px 20px rgba(212, 175, 55, 0.2);
+        --primary-color: #d4af37;
+        --secondary-color: #000000;
+        --accent-color: #ffffff;
+        --highlight-gold: #d4af37;
+        --highlight-navy: #000000;
+        --highlight-green: #ffffff;
+        --navy-blue: #000000;
+        --error-color: #ff4444;
+        --success-color: #00ff88;
+      }
+
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      body {
+        font-family: "Inter", sans-serif;
+        background: #000000;
+        color: var(--text-primary);
+        min-height: 100vh;
+        line-height: 1.6;
+      }
+
+      .header {
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        background: rgba(0, 0, 0, 0.95);
+        backdrop-filter: blur(20px);
+        border-bottom: 2px solid var(--border-color);
+        z-index: 1000;
+        box-shadow: 0 2px 20px rgba(212, 175, 55, 0.2);
+      }
+
+      .header-content {
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 1.125rem 1rem;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+      }
+
+      .logo {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        font-size: 1.5rem;
+        font-weight: 700;
+        color: var(--highlight-gold);
+        text-decoration: none;
+        text-shadow: 0 0 5px rgba(212, 175, 55, 0.3);
+      }
+
+      .logo-icon {
+        width: 32px;
+        height: 32px;
+        background: var(--highlight-gold);
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        box-shadow: 0 0 10px rgba(212, 175, 55, 0.4);
+        border: 2px solid var(--highlight-gold);
+        animation: glow 2s ease-in-out infinite alternate;
+      }
+
+      @keyframes glow {
+        from {
+          box-shadow: 0 0 10px rgba(212, 175, 55, 0.4);
+        }
+        to {
+          box-shadow: 0 0 15px rgba(212, 175, 55, 0.5);
+        }
+      }
+
+      .logo-icon::before {
+        content: "S";
+        font-size: 1rem;
+        font-weight: 700;
+        color: #000000;
+        z-index: 2;
+        position: relative;
+        font-family: "Inter", sans-serif;
+        letter-spacing: -0.5px;
+      }
+
+      .nav-links {
+        display: flex;
+        align-items: center;
+        gap: 2rem;
+      }
+
+      .nav-link {
+        color: var(--text-secondary);
+        text-decoration: none;
+        font-weight: 500;
+        transition: all 0.3s ease;
+        position: relative;
+        cursor: pointer;
+        font-size: 1rem;
+        padding: 0.5rem 1rem;
+        border-radius: 8px;
+      }
+
+      .nav-link:hover {
+        color: var(--highlight-gold);
+        transform: translateY(-2px);
+      }
+
+      .nav-link::after {
+        content: "";
+        position: absolute;
+        bottom: 0;
+        left: 50%;
+        width: 0;
+        height: 2px;
+        background: var(--highlight-gold);
+        transition: all 0.3s ease;
+        transform: translateX(-50%);
+      }
+
+      .nav-link:hover::after {
+        width: 80%;
+      }
+
+      .nav-link.blink {
+        animation: blink 0.3s ease-in-out;
+      }
+
+      @keyframes blink {
+        0% {
+          opacity: 1;
+        }
+        50% {
+          opacity: 0.5;
+        }
+        100% {
+          opacity: 1;
+        }
+      }
+
+      .main-content {
+        padding-top: 100px;
+        min-height: 100vh;
+      }
+
+      .tool-header {
+        text-align: center;
+        padding: 3rem 1rem;
+        background: #000000;
+      }
+
+      .tool-title {
+        font-size: 2.5rem;
+        font-weight: 700;
+        color: var(--highlight-gold);
+        margin-bottom: 1rem;
+        text-shadow: 0 0 15px rgba(212, 175, 55, 0.3);
+      }
+
+      .tool-subtitle {
+        font-size: 1.1rem;
+        color: var(--text-secondary);
+        max-width: 600px;
+        margin: 0 auto;
+      }
+
+      .upload-container {
+        max-width: 600px;
+        margin: 2rem auto;
+        background: var(--bg-accent);
+        border: 2px solid var(--border-color);
+        border-radius: 16px;
+        padding: 2rem;
+        box-shadow: var(--shadow);
+      }
+
+      .upload-title {
+        font-size: 1.5rem;
+        font-weight: 600;
+        color: var(--highlight-gold);
+        text-align: center;
+        margin-bottom: 1rem;
+      }
+
+      .upload-subtitle {
+        color: var(--text-secondary);
+        text-align: center;
+        margin-bottom: 1.5rem;
+        font-size: 0.95rem;
+      }
+
+      .upload-area {
+        border: 2px solid var(--border-color);
+        border-radius: 12px;
+        padding: 2rem 1.5rem;
+        text-align: center;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        background: var(--bg-secondary);
+        position: relative;
+        overflow: hidden;
+        min-height: 150px;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+      }
+
+      .upload-area:hover {
+        border-color: var(--highlight-gold);
+        background: rgba(212, 175, 55, 0.05);
+        transform: scale(1.02);
+      }
+
+      .upload-area.dragover {
+        border-color: var(--highlight-gold);
+        background: rgba(212, 175, 55, 0.1);
+        transform: scale(1.02);
+      }
+
+      .upload-icon {
+        font-size: 3rem;
+        color: var(--highlight-gold);
+        margin-bottom: 1rem;
+        text-shadow: 0 0 10px rgba(212, 175, 55, 0.3);
+      }
+
+      .upload-instructions {
+        color: var(--text-secondary);
+        margin-bottom: 0.5rem;
+        font-size: 1rem;
+      }
+
+      .file-info {
+        display: none;
+        margin-top: 1rem;
+        padding: 1rem;
+        background: var(--bg-secondary);
+        border-radius: 8px;
+        border: 1px solid var(--border-color);
+      }
+
+      .file-info.show {
+        display: block;
+      }
+
+      .file-name {
+        font-weight: 600;
+        color: var(--text-primary);
+        margin-bottom: 0.5rem;
+      }
+
+      .file-size {
+        color: var(--text-secondary);
+        font-size: 0.875rem;
+      }
+
+      .voice-section {
+        margin: 1.5rem 0;
+      }
+
+      .voice-label {
+        display: block;
+        font-weight: 600;
+        margin-bottom: 1rem;
+        color: var(--text-primary);
+        font-size: 1rem;
+        text-align: center;
+      }
+
+      .voice-options {
+        display: flex;
+        justify-content: center;
+        gap: 1rem;
+        margin-bottom: 1.5rem;
+        flex-wrap: wrap;
+      }
+
+      .voice-option {
+        position: relative;
+        cursor: pointer;
+        flex: 1;
+        min-width: 120px;
+      }
+
+      .voice-option input[type="radio"] {
+        display: none;
+      }
+
+      .voice-option label {
+        display: flex;
+        align-items: center;
+        gap: 0.75rem;
+        padding: 0.75rem 1rem;
+        background: var(--bg-secondary);
+        border: 2px solid var(--border-color);
+        border-radius: 12px;
+        cursor: pointer;
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        font-weight: 600;
+        color: var(--text-primary);
+        font-size: 1rem;
+        justify-content: center;
+        position: relative;
+        overflow: hidden;
+        width: 100%;
+      }
+
+      .voice-option input[type="radio"]:checked + label {
+        border-color: var(--highlight-gold);
+        background: rgba(212, 175, 55, 0.1);
+        box-shadow: var(--shadow);
+        transform: translateY(-2px);
+      }
+
+      .voice-option label:hover {
+        border-color: var(--highlight-gold);
+        transform: translateY(-1px);
+        box-shadow: var(--shadow);
+      }
+
+      .voice-option i {
+        font-size: 1.25rem;
+        color: var(--highlight-gold);
+        z-index: 2;
+        position: relative;
+      }
+
+      .submit-btn {
+        background: linear-gradient(135deg, var(--highlight-gold), #e6c84e);
+        color: #000000;
+        border: none;
+        padding: 0.8rem 1.5rem;
+        border-radius: 25px;
+        font-size: 1rem;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        width: 100%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 0.75rem;
+        box-shadow: var(--shadow);
+        font-family: "Inter", sans-serif;
+        margin-top: 1rem;
+      }
+
+      .submit-btn:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 6px 15px rgba(212, 175, 55, 0.3);
+        background: linear-gradient(135deg, #e6c84e, var(--highlight-gold));
+      }
+
+      .submit-btn:disabled {
+        opacity: 0.6;
+        cursor: not-allowed;
+        transform: none;
+      }
+
+      .progress-container {
+        display: none;
+        margin: 1.5rem 0;
+        text-align: center;
+      }
+
+      .progress-container.show {
+        display: block;
+      }
+
+      /* Clock Animation Styles */
+      .clock-container {
+        width: 100px;
+        height: 100px;
+        margin: 0 auto 1rem;
+        position: relative;
+      }
+
+      .clock-face {
+        width: 100%;
+        height: 100%;
+        border: 4px solid var(--highlight-gold);
+        border-radius: 50%;
+        position: relative;
+        box-shadow: 0 0 15px rgba(212, 175, 55, 0.3);
+      }
+
+      .clock-center {
+        width: 10px;
+        height: 10px;
+        background: var(--highlight-gold);
+        border-radius: 50%;
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        z-index: 4;
+      }
+
+      .clock-hour {
+        width: 4px;
+        height: 25px;
+        background: var(--highlight-gold);
+        position: absolute;
+        top: 25px;
+        left: 50%;
+        transform-origin: bottom center;
+        transform: translateX(-50%) rotate(0deg);
+        z-index: 3;
+        border-radius: 4px;
+        animation: hourRotate 24s linear infinite;
+      }
+
+      .clock-minute {
+        width: 3px;
+        height: 35px;
+        background: var(--highlight-gold);
+        position: absolute;
+        top: 15px;
+        left: 50%;
+        transform-origin: bottom center;
+        transform: translateX(-50%) rotate(0deg);
+        z-index: 2;
+        border-radius: 4px;
+        animation: minuteRotate 6s linear infinite;
+      }
+
+      .clock-second {
+        width: 2px;
+        height: 45px;
+        background: var(--highlight-gold);
+        position: absolute;
+        top: 5px;
+        left: 50%;
+        transform-origin: bottom center;
+        transform: translateX(-50%) rotate(0deg);
+        z-index: 1;
+        border-radius: 4px;
+        animation: secondRotate 1s linear infinite;
+      }
+
+      @keyframes hourRotate {
+        from {
+          transform: translateX(-50%) rotate(0deg);
+        }
+        to {
+          transform: translateX(-50%) rotate(360deg);
+        }
+      }
+
+      @keyframes minuteRotate {
+        from {
+          transform: translateX(-50%) rotate(0deg);
+        }
+        to {
+          transform: translateX(-50%) rotate(360deg);
+        }
+      }
+
+      @keyframes secondRotate {
+        from {
+          transform: translateX(-50%) rotate(0deg);
+        }
+        to {
+          transform: translateX(-50%) rotate(360deg);
+        }
+      }
+
+      .progress-percentage {
+        font-size: 1.2rem;
+        font-weight: 600;
+        color: var(--highlight-gold);
+        margin-bottom: 0.5rem;
+      }
+
+      .progress-text {
+        text-align: center;
+        color: var(--text-secondary);
+        font-size: 0.875rem;
+        margin-bottom: 1rem;
+      }
+
+      .cancel-btn {
+        background: transparent;
+        color: var(--highlight-gold);
+        border: 1px solid var(--highlight-gold);
+        padding: 0.5rem 1rem;
+        border-radius: 25px;
+        font-size: 0.9rem;
+        font-weight: 500;
+        cursor: pointer;
+        transition: all 0.3s ease;
+      }
+
+      .cancel-btn:hover {
+        background: rgba(212, 175, 55, 0.1);
+      }
+
+      .download-popup {
+        display: none;
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0, 0, 0, 0.8);
+        z-index: 2000;
+        justify-content: center;
+        align-items: center;
+      }
+
+      .download-popup.show {
+        display: flex;
+      }
+
+      .download-content {
+        background: var(--bg-accent);
+        padding: 2rem;
+        border-radius: 16px;
+        text-align: center;
+        max-width: 500px;
+        width: 90%;
+        border: 2px solid var(--highlight-gold);
+      }
+
+      .download-text {
+        margin-bottom: 1.5rem;
+        color: var(--text-primary);
+      }
+
+      .download-buttons {
+        display: flex;
+        justify-content: center;
+        gap: 1rem;
+      }
+
+      .download-btn {
+        background: var(--highlight-gold);
+        color: #000000;
+        border: none;
+        padding: 0.75rem 1.5rem;
+        border-radius: 25px;
+        font-size: 1rem;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.3s ease;
+      }
+
+      .download-btn:hover {
+        background: #e6c84e;
+        transform: translateY(-2px);
+      }
+
+      .popup-cancel-btn {
+        background: transparent;
+        color: var(--highlight-gold);
+        border: 1px solid var(--highlight-gold);
+        padding: 0.75rem 1.5rem;
+        border-radius: 25px;
+        font-size: 1rem;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.3s ease;
+      }
+
+      .popup-cancel-btn:hover {
+        background: rgba(212, 175, 55, 0.1);
+      }
+
+      .footer {
+        background: var(--bg-primary);
+        padding: 2rem 1rem;
+        text-align: center;
+        border-top: 2px solid var(--border-color);
+        margin-top: 2rem;
+      }
+
+      .footer p {
+        color: var(--text-secondary);
+        font-size: 0.9rem;
+      }
+
+      @media (max-width: 768px) {
+        .tool-title {
+          font-size: 2rem;
+        }
+
+        .upload-container {
+          margin: 1rem;
+          padding: 1.5rem;
+        }
+
+        .voice-options {
+          flex-direction: column;
+          align-items: center;
+        }
+
+        .voice-option {
+          width: 100%;
+          max-width: 250px;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <header class="header">
+      <div class="header-content">
+        <a href="/" class="logo">
+          <div class="logo-icon"></div>
+          <span>NoProfanity</span>
+        </a>
+        <nav class="nav-links">
+          <a href="/" class="nav-link">Home</a>
+          <a href="/tools" class="nav-link">Tools</a>
+          <a href="/contact" class="nav-link">Contact</a>
+          <a href="/help" class="nav-link">Help</a>
+        </nav>
+      </div>
+    </header>
+
+    <main class="main-content">
+      <section class="tool-header">
+        <h1 class="tool-title">Video Audio Cleaning</h1>
+        <p class="tool-subtitle">
+          Automatically detect and replace profanity in videos with
+          natural-sounding alternatives
+        </p>
+      </section>
+
+      <div class="upload-container">
+        <h2 class="upload-title">Clean Your Video Audio</h2>
+        <p class="upload-subtitle">
+          Upload your video file and we'll detect and replace profanities with
+          seamless natural voice.
+        </p>
+
+        <form id="uploadForm" enctype="multipart/form-data">
+          <div class="upload-area" id="uploadArea">
+            <div class="upload-icon">
+              <i class="fas fa-cloud-upload-alt"></i>
+            </div>
+            <p class="upload-instructions">
+              Drag and drop your video file here or click to browse
+            </p>
+            <p
+              style="
+                color: var(--text-secondary);
+                font-size: 0.875rem;
+                margin-top: 1rem;
+              "
+            >
+              Supports MP4, AVI, MKV, MOV, WMV, FLV, and WebM formats (Max:
+              25MB)
+            </p>
+            <input
+              type="file"
+              id="videoFile"
+              name="video"
+              accept="video/*"
+              style="display: none"
+            />
+          </div>
+
+          <div class="file-info" id="fileInfo">
+            <div class="file-name" id="fileName"></div>
+            <div class="file-size" id="fileSize"></div>
+          </div>
+
+          <div class="voice-section">
+            <label class="voice-label">Choose Replacement Voice Style</label>
+            <div class="voice-options">
+              <div class="voice-option">
+                <input
+                  type="radio"
+                  id="female"
+                  name="gender"
+                  value="female"
+                  checked
+                />
+                <label for="female">
+                  <i class="fas fa-venus"></i>
+                  Female Voice
+                </label>
+              </div>
+              <div class="voice-option">
+                <input type="radio" id="male" name="gender" value="male" />
+                <label for="male">
+                  <i class="fas fa-mars"></i>
+                  Male Voice
+                </label>
+              </div>
+            </div>
+          </div>
+
+          <div class="progress-container" id="progressContainer">
+            <div class="clock-container">
+              <div class="clock-face">
+                <div class="clock-hour"></div>
+                <div class="clock-minute"></div>
+                <div class="clock-second"></div>
+                <div class="clock-center"></div>
+              </div>
+            </div>
+            <div class="progress-percentage" id="progressPercentage">0%</div>
+            <div class="progress-text" id="progressText">Processing...</div>
+            <button type="button" class="cancel-btn" id="cancelBtn">
+              Cancel Process
+            </button>
+          </div>
+
+          <button type="submit" class="submit-btn" id="submitBtn" disabled>
+            <i class="fas fa-magic"></i>
+            <span id="submitText">Clean My Video</span>
+          </button>
+        </form>
+      </div>
+
+      <div class="download-popup" id="downloadPopup">
+        <div class="download-content">
+          <p class="download-text" id="downloadText">
+            Want to download the cleaned video?
+          </p>
+          <div class="download-buttons">
+            <button class="download-btn" id="confirmDownload">Download</button>
+            <button class="popup-cancel-btn" id="cancelDownload">Cancel</button>
+          </div>
+        </div>
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-content">
+        <p>
+          &copy; 2024 NoProfanity. Professional video audio cleaning technology.
+        </p>
+      </div>
+    </footer>
+
+    <script>
+      // File Upload
+      const uploadArea = document.getElementById("uploadArea");
+      const videoFile = document.getElementById("videoFile");
+      const fileInfo = document.getElementById("fileInfo");
+      const fileName = document.getElementById("fileName");
+      const fileSize = document.getElementById("fileSize");
+      const submitBtn = document.getElementById("submitBtn");
+      const progressContainer = document.getElementById("progressContainer");
+      const progressText = document.getElementById("progressText");
+      const progressPercentage = document.getElementById("progressPercentage");
+      const cancelBtn = document.getElementById("cancelBtn");
+      const downloadPopup = document.getElementById("downloadPopup");
+      const downloadText = document.getElementById("downloadText");
+      const confirmDownload = document.getElementById("confirmDownload");
+      const cancelDownload = document.getElementById("cancelDownload");
+
+      let processing = false;
+      let progressInterval;
+      let currentProgress = 0;
+
+      uploadArea.addEventListener("click", () => {
+        videoFile.click();
+      });
+
+      uploadArea.addEventListener("dragover", (e) => {
+        e.preventDefault();
+        uploadArea.classList.add("dragover");
+      });
+
+      uploadArea.addEventListener("dragleave", () => {
+        uploadArea.classList.remove("dragover");
+      });
+
+      uploadArea.addEventListener("drop", (e) => {
+        e.preventDefault();
+        uploadArea.classList.remove("dragover");
+        const files = e.dataTransfer.files;
+        if (files.length > 0) {
+          handleFile(files[0]);
+        }
+      });
+
+      videoFile.addEventListener("change", (e) => {
+        if (e.target.files.length > 0) {
+          handleFile(e.target.files[0]);
+        }
+      });
+
+      function handleFile(file) {
+        const maxSize = 25 * 1024 * 1024; // 25MB
+
+        if (file.size > maxSize) {
+          const uploadInstructions = document.querySelector(
+            ".upload-instructions"
+          );
+          uploadInstructions.textContent =
+            "File size too large. Please upload a file smaller than 25MB.";
+          uploadInstructions.style.color = "var(--error-color)";
+          return;
+        }
+
+        const allowedTypes = [
+          "video/mp4",
+          "video/avi",
+          "video/mkv",
+          "video/mov",
+          "video/wmv",
+          "video/flv",
+          "video/webm",
+          "video/quicktime",
+          "video/x-msvideo",
+          "video/x-matroska",
+          "video/x-ms-wmv",
+          "video/x-flv",
+          "application/octet-stream",
+        ];
+
+        const fileExtension = "." + file.name.split(".").pop().toLowerCase();
+        const allowedExtensions = [
+          ".mp4",
+          ".avi",
+          ".mkv",
+          ".mov",
+          ".wmv",
+          ".flv",
+          ".webm",
+        ];
+
+        const isValidType =
+          allowedTypes.includes(file.type) ||
+          allowedExtensions.includes(fileExtension);
+
+        if (!isValidType) {
+          const uploadInstructions = document.querySelector(
+            ".upload-instructions"
+          );
+          uploadInstructions.textContent =
+            "Unsupported format. Please select a video file.";
+          uploadInstructions.style.color = "var(--error-color)";
+          return;
+        }
+
+        fileName.textContent = file.name;
+        fileSize.textContent = formatFileSize(file.size);
+        fileInfo.classList.add("show");
+        submitBtn.disabled = false;
+
+        const uploadInstructions = document.querySelector(
+          ".upload-instructions"
+        );
+        uploadInstructions.textContent = "File selected successfully!";
+        uploadInstructions.style.color = "var(--success-color)";
+      }
+
+      function formatFileSize(bytes) {
+        if (bytes === 0) return "0 Bytes";
+        const k = 1024;
+        const sizes = ["Bytes", "KB", "MB", "GB"];
+        const i = Math.floor(Math.log(bytes) / Math.log(k));
+        return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + " " + sizes[i];
+      }
+
+      function updateProgress() {
+        currentProgress += Math.random() * 15;
+        if (currentProgress > 90) currentProgress = 90;
+
+        progressPercentage.textContent = Math.floor(currentProgress) + "%";
+
+        if (currentProgress < 30) {
+          progressText.textContent = "Uploading...";
+        } else if (currentProgress < 60) {
+          progressText.textContent = "Processing...";
+        } else if (currentProgress < 90) {
+          progressText.textContent = "Finalizing...";
+        }
+      }
+
+      function resetForm() {
+        processing = false;
+        currentProgress = 0;
+        clearInterval(progressInterval);
+        progressContainer.classList.remove("show");
+        submitBtn.disabled = false;
+        submitBtn.innerHTML =
+          '<i class="fas fa-magic"></i> <span id="submitText">Clean My Video</span>';
+        fileInfo.classList.remove("show");
+        videoFile.value = "";
+        const uploadInstructions = document.querySelector(
+          ".upload-instructions"
+        );
+        uploadInstructions.textContent =
+          "Drag and drop your video file here or click to browse";
+        uploadInstructions.style.color = "var(--text-secondary)";
+      }
+
+      // Form Submission
+      const uploadForm = document.getElementById("uploadForm");
+
+      uploadForm.addEventListener("submit", async (e) => {
+        e.preventDefault();
+
+        if (!videoFile.files.length) {
+          const uploadInstructions = document.querySelector(
+            ".upload-instructions"
+          );
+          uploadInstructions.textContent = "Please upload a file";
+          uploadInstructions.style.color = "var(--error-color)";
+          return;
+        }
+
+        const formData = new FormData(uploadForm);
+        formData.append("option", "video-clean");
+
+        const selectedGender = document.querySelector(
+          'input[name="gender"]:checked'
+        );
+        if (selectedGender) {
+          formData.append("gender", selectedGender.value);
+        }
+
+        processing = true;
+        progressContainer.classList.add("show");
+        submitBtn.disabled = true;
+        submitBtn.innerHTML =
+          '<i class="fas fa-spinner fa-spin"></i> Processing...';
+
+        const uploadInstructions = document.querySelector(
+          ".upload-instructions"
+        );
+        uploadInstructions.textContent = "Processing your file...";
+        uploadInstructions.style.color = "var(--primary-color)";
+
+        progressInterval = setInterval(updateProgress, 500);
+
+        try {
+          const response = await fetch("/process", {
+            method: "POST",
+            body: formData,
+          });
+
+          clearInterval(progressInterval);
+          progressPercentage.textContent = "100%";
+          progressText.textContent = "Done!";
+
+          if (response.ok) {
+            const contentType = response.headers.get("content-type");
+            if (contentType && contentType.includes("application/json")) {
+              const errorData = await response.json();
+              alert("Error: " + (errorData.error || "Processing failed"));
+            } else {
+              const blob = await response.blob();
+              const url = window.URL.createObjectURL(blob);
+              const filename =
+                "CLEAN_" + videoFile.files[0].name.replace(/\.[^/.]+$/, ".mp4");
+
+              // Show download popup instead of automatically downloading
+              downloadText.textContent = `Want to download the ${filename}?`;
+              downloadPopup.classList.add("show");
+
+              // Set up download button
+              confirmDownload.onclick = function () {
+                const a = document.createElement("a");
+                a.href = url;
+                a.download = filename;
+                document.body.appendChild(a);
+                a.click();
+                document.body.removeChild(a);
+                window.URL.revokeObjectURL(url);
+                downloadPopup.classList.remove("show");
+                resetForm();
+              };
+
+              // Set up cancel button
+              cancelDownload.onclick = function () {
+                window.URL.revokeObjectURL(url);
+                downloadPopup.classList.remove("show");
+                resetForm();
+              };
+            }
+          } else {
+            const contentType = response.headers.get("content-type");
+            if (contentType && contentType.includes("application/json")) {
+              const errorData = await response.json();
+              alert("Error: " + (errorData.error || "Processing failed"));
+            } else {
+              let errorMessage =
+                "Error: Processing failed with status " + response.status;
+              if (response.status === 502) {
+                errorMessage =
+                  "Error: Server is temporarily unavailable. Please try again in a few minutes.";
+              }
+              alert(errorMessage);
+            }
+            resetForm();
+          }
+        } catch (error) {
+          clearInterval(progressInterval);
+          console.error("Processing error:", error);
+          alert("Error: " + error.message);
+          resetForm();
+        }
+      });
+
+      cancelBtn.addEventListener("click", function () {
+        if (processing) {
+          if (confirm("Are you sure you want to cancel the current process?")) {
+            resetForm();
+          }
+        }
+      });
+
+      // Add blink effect to navigation links
+      document.querySelectorAll(".nav-link").forEach((link) => {
+        link.addEventListener("click", function () {
+          this.classList.add("blink");
+          setTimeout(() => {
+            this.classList.remove("blink");
+          }, 300);
+        });
+      });
+    </script>
+  </body>
+</html>

@@ -1,0 +1,178 @@
+from flask import render_template, request, send_file, jsonify
+import os
+import uuid
+import logging
+from werkzeug.utils import secure_filename
+from python.main import process_video
+from app import app
+
+# Configure logging
+logging.basicConfig(level=logging.INFO)
+logger = logging.getLogger(__name__)
+
+# Configure upload settings
+UPLOAD_FOLDER = os.path.abspath("uploads")
+OUTPUT_FOLDER = os.path.abspath("output")
+ALLOWED_EXTENSIONS = {
+    "video": {"mp4", "avi", "mkv", "mov", "wmv", "flv", "webm"},
+    "audio": {"mp3", "wav", "m4a", "aac", "ogg"}
+}
+
+app.config["UPLOAD_FOLDER"] = UPLOAD_FOLDER
+app.config["MAX_CONTENT_LENGTH"] = 25 * 1024 * 1024  # 25MB
+
+# Ensure upload and output directories exist
+os.makedirs(UPLOAD_FOLDER, exist_ok=True)
+os.makedirs(OUTPUT_FOLDER, exist_ok=True)
+
+def allowed_file(filename, file_type):
+    """Check if file extension is allowed."""
+    return "." in filename and filename.rsplit(".", 1)[1].lower() in ALLOWED_EXTENSIONS.get(file_type, set())
+
+@app.route("/")
+def index():
+    """Home page."""
+    return render_template("index.html")
+
+@app.route("/tools")
+def tools():
+    """Tools page."""
+    return render_template("tools.html")
+
+@app.route("/tools/video-clean")
+def video_clean():
+    """Video cleaning tool page."""
+    return render_template("video_clean.html")
+
+@app.route("/tools/audio-extract")
+def audio_extract():
+    """Audio extraction tool page."""
+    return render_template("audio_extract.html")
+
+@app.route("/tools/audio-clean")
+def audio_clean():
+    """Audio cleaning tool page."""
+    return render_template("audio_clean.html")
+
+@app.route("/tools/video-merge")
+def video_merge():
+    """Video and audio merge tool page."""
+    return render_template("video_merge.html")
+
+@app.route("/tools/format-convert")
+def format_convert():
+    """Format conversion tool page."""
+    return render_template("format_convert.html")
+
+@app.route("/tools/batch-process")
+def batch_process():
+    """Batch processing tool page."""
+    return render_template("batch_process.html")
+
+@app.route("/contact")
+def contact():
+    """Contact page."""
+    return render_template("contact.html")
+
+@app.route("/help")
+def help():
+    """Help page."""
+    return render_template("help.html")
+
+@app.route("/login")
+def login():
+    """Login page."""
+    return render_template("login.html")
+
+@app.route("/signup")
+def signup():
+    """Signup page."""
+    return render_template("signup.html")
+
+@app.route("/health")
+def health():
+    """Health check endpoint."""
+    return jsonify({"status": "healthy", "message": "NoProfanity service is running"})
+
+@app.route("/process", methods=["POST"])
+def process():
+    """Process video/audio files."""
+    try:
+        # Check if file was uploaded
+        if "video" not in request.files:
+            return jsonify({"error": "No file uploaded"}), 400
+
+        file = request.files["video"]
+        if file.filename == "":
+            return jsonify({"error": "No file selected"}), 400
+
+        # Get processing option
+        option = request.form.get("option", "video-clean")
+        gender = request.form.get("gender", "female")
+
+        # Validate file type based on option
+        if option in ["video-clean", "audio-extract"]:
+            if not allowed_file(file.filename, "video"):
+                return jsonify({"error": "Invalid video file format"}), 400
+        elif option == "audio-clean":
+            if not allowed_file(file.filename, "audio"):
+                return jsonify({"error": "Invalid audio file format"}), 400
+
+        # Generate unique filename
+        file_extension = file.filename.rsplit(".", 1)[1].lower()
+        unique_filename = f"{uuid.uuid4()}.{file_extension}"
+        file_path = os.path.join(app.config["UPLOAD_FOLDER"], unique_filename)
+
+        # Save uploaded file
+        file.save(file_path)
+
+        logger.info(f"Processing {option}: {file.filename}")
+        logger.info(f"Upload path: {file_path}")
+
+        # Get absolute path to output directory
+        output_dir = os.path.abspath(os.path.join(os.path.dirname(__file__), '..', 'output'))
+        os.makedirs(output_dir, exist_ok=True)
+        logger.info(f"Output directory: {output_dir}")
+
+        # Process the file
+        if option == "video-clean":
+            result = process_video(file_path, output_dir, gender)
+            output_file = result["final_video"]
+            
+            logger.info(f"Looking for output file at: {output_file}")
+            if not os.path.exists(output_file):
+                raise FileNotFoundError(f"Output file not found at {output_file}")
+
+        elif option == "audio-extract":
+            # Extract audio only
+            from python.audio_processing.audio_cleaner import extract_audio
+            output_file = os.path.join(output_dir, f"extracted_{unique_filename}.mp3")
+            extract_audio(file_path, output_file)
+        elif option == "audio-clean":
+            # Process audio file
+            result = process_video(file_path, output_dir, gender)
+            output_file = result["censored_audio"]
+        else:
+            return jsonify({"error": "Invalid processing option"}), 400
+
+        # Clean up uploaded file
+        os.remove(file_path)
+
+        # Return processed file
+        return send_file(
+            output_file,
+            as_attachment=True,
+            download_name=os.path.basename(output_file)
+        )
+
+    except Exception as e:
+        logger.error(f"Processing error: {str(e)}", exc_info=True)
+        return jsonify({"error": str(e)}), 500
+
+if __name__ == "__main__":
+    app.run(debug=True, host="0.0.0.0", port=10000)
+
+
+
+
+

@@ -1,0 +1,467 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Tools - NoProfanity</title>
+    <link
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"
+      rel="stylesheet"
+    />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      :root {
+        --bg-primary: #000000;
+        --bg-secondary: #000000;
+        --bg-accent: #000000;
+        --text-primary: #ffffff;
+        --text-secondary: #ffffff;
+        --text-accent: #d4af37;
+        --border-color: #000000;
+        --shadow: 0 4px 20px rgba(212, 175, 55, 0.15);
+        --primary-color: #d4af37;
+        --secondary-color: #d4af37;
+        --accent-color: #d4af37;
+        --highlight-gold: #d4af37;
+        --highlight-navy: #d4af37;
+        --highlight-green: #d4af37;
+        --navy-blue: #d4af37;
+      }
+
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      body {
+        font-family: "Inter", sans-serif;
+        background: #000000;
+        color: var(--text-primary);
+        min-height: 100vh;
+        line-height: 1.6;
+      }
+
+      .header {
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        background: rgba(0, 0, 0, 0.95);
+        backdrop-filter: blur(20px);
+        border-bottom: 2px solid var(--border-color);
+        z-index: 1000;
+        box-shadow: 0 2px 20px rgba(212, 175, 55, 0.15);
+      }
+
+      .header-content {
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 1.125rem 1rem;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+      }
+
+      .logo {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        font-size: 1.5rem;
+        font-weight: 700;
+        color: var(--highlight-gold);
+        text-decoration: none;
+        text-shadow: 0 0 10px rgba(212, 175, 55, 0.25);
+      }
+
+      .logo-icon {
+        width: 40px;
+        height: 40px;
+        background: var(--highlight-gold);
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        box-shadow: 0 0 20px rgba(212, 175, 55, 0.3);
+        border: 2px solid var(--highlight-gold);
+        animation: glow 2s ease-in-out infinite alternate;
+      }
+
+      @keyframes glow {
+        from {
+          box-shadow: 0 0 20px rgba(212, 175, 55, 0.3);
+        }
+        to {
+          box-shadow: 0 0 30px rgba(212, 175, 55, 0.4);
+        }
+      }
+
+      .logo-icon::before {
+        content: "S";
+        font-size: 1rem;
+        font-weight: 700;
+        color: #000000;
+        z-index: 2;
+        position: relative;
+        font-family: "Inter", sans-serif;
+        letter-spacing: -0.5px;
+      }
+
+      .nav-links {
+        display: flex;
+        align-items: center;
+        gap: 2.7rem;
+      }
+
+      .nav-link {
+        color: var(--text-secondary);
+        text-decoration: none;
+        font-weight: 500;
+        transition: all 0.3s ease;
+        position: relative;
+        cursor: pointer;
+        font-size: 1rem;
+        padding: 0.5rem 1rem;
+        border-radius: 8px;
+      }
+
+      .nav-link:hover {
+        color: var(--highlight-gold);
+        transform: translateY(-2px);
+      }
+
+      .nav-link::after {
+        content: "";
+        position: absolute;
+        bottom: 0;
+        left: 50%;
+        width: 0;
+        height: 2px;
+        background: var(--highlight-gold);
+        transition: all 0.3s ease;
+        transform: translateX(-50%);
+      }
+
+      .nav-link:hover::after {
+        width: 80%;
+      }
+
+      .nav-link.blink {
+        animation: blink 0.3s ease-in-out;
+      }
+
+      @keyframes blink {
+        0% {
+          opacity: 1;
+        }
+        50% {
+          opacity: 0.5;
+        }
+        100% {
+          opacity: 1;
+        }
+      }
+
+      .main-content {
+        padding-top: 100px;
+        min-height: 100vh;
+      }
+
+      .tools-header {
+        text-align: center;
+        padding: 3rem 1rem;
+        background: linear-gradient(135deg, #000000, #000000);
+      }
+
+      .tools-title {
+        font-size: 3rem;
+        font-weight: 700;
+        color: var(--highlight-gold);
+        margin-bottom: 1rem;
+        text-shadow: 0 0 30px rgba(212, 175, 55, 0.25);
+      }
+
+      .tools-subtitle {
+        font-size: 1.25rem;
+        color: var(--text-secondary);
+        max-width: 600px;
+        margin: 0 auto;
+      }
+
+      .tools-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+        gap: 2rem;
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 3rem 1rem;
+      }
+
+      .tool-card {
+        background: var(--bg-accent);
+        border: 2px solid var(--border-color);
+        border-radius: 16px;
+        padding: 2rem;
+        text-align: center;
+        transition: all 0.3s ease;
+        position: relative;
+        overflow: hidden;
+        cursor: pointer;
+      }
+
+      .tool-card::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: -100%;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(
+          90deg,
+          transparent,
+          rgba(212, 175, 55, 0.1),
+          transparent
+        );
+        transition: left 0.5s ease;
+      }
+
+      .tool-card:hover::before {
+        left: 100%;
+      }
+
+      .tool-card:hover {
+        transform: translateY(-10px);
+        border-color: var(--highlight-gold);
+        box-shadow: 0 10px 30px rgba(212, 175, 55, 0.1);
+      }
+
+      .tool-icon {
+        font-size: 3rem;
+        color: var(--highlight-gold);
+        margin-bottom: 1.5rem;
+        text-shadow: 0 0 20px rgba(212, 175, 55, 0.25);
+      }
+
+      .tool-title {
+        font-size: 1.5rem;
+        font-weight: 600;
+        color: var(--text-primary);
+        margin-bottom: 1rem;
+      }
+
+      .tool-description {
+        color: var(--text-secondary);
+        line-height: 1.6;
+        margin-bottom: 1.5rem;
+      }
+
+      .tool-btn {
+        background: linear-gradient(135deg, var(--highlight-gold), #e6c04a);
+        color: #000000;
+        padding: 0.75rem 1.5rem;
+        border-radius: 25px;
+        text-decoration: none;
+        font-weight: 600;
+        transition: all 0.3s ease;
+        border: none;
+        cursor: pointer;
+        font-size: 1rem;
+        box-shadow: 0 4px 15px rgba(212, 175, 55, 0.15);
+        display: inline-block;
+      }
+
+      .tool-btn:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 6px 20px rgba(212, 175, 55, 0.25);
+        background: linear-gradient(135deg, #e6c04a, var(--highlight-gold));
+      }
+
+      .footer {
+        background: var(--bg-primary);
+        padding: 2rem 1rem;
+        text-align: center;
+        border-top: 2px solid var(--border-color);
+        margin-top: 2rem;
+      }
+
+      .footer p {
+        color: var(--text-secondary);
+        font-size: 0.9rem;
+      }
+
+      @media (max-width: 768px) {
+        .tools-title {
+          font-size: 2.5rem;
+        }
+
+        .tools-grid {
+          grid-template-columns: 1fr;
+          padding: 2rem 1rem;
+        }
+
+        .tool-card {
+          padding: 1.5rem;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <header class="header">
+      <div class="header-content">
+        <a href="/" class="logo">
+          <div class="logo-icon"></div>
+          <span>NoProfanity</span>
+        </a>
+        <nav class="nav-links">
+          <a href="/" class="nav-link">Home</a>
+          <a href="/tools" class="nav-link">Tools</a>
+          <a href="/contact" class="nav-link">Contact</a>
+          <a href="/help" class="nav-link">Help</a>
+        </nav>
+      </div>
+    </header>
+
+    <main class="main-content">
+      <section class="tools-header">
+        <h1 class="tools-title">Professional Tools</h1>
+        <p class="tools-subtitle">
+          Choose from our comprehensive suite of audio and video processing
+          tools
+        </p>
+      </section>
+
+      <div class="tools-grid">
+        <div
+          class="tool-card"
+          onclick="window.location.href='/tools/video-clean'"
+        >
+          <div class="tool-icon">
+            <i class="fas fa-video"></i>
+          </div>
+          <h3 class="tool-title">Video Audio Cleaning</h3>
+          <p class="tool-description">
+            Automatically detect and replace profanity in videos with
+            natural-sounding alternatives while preserving video quality.
+          </p>
+          <a href="/tools/video-clean" class="tool-btn">
+            <i class="fas fa-magic"></i>
+            Clean Video
+          </a>
+        </div>
+
+        <div
+          class="tool-card"
+          onclick="window.location.href='/tools/audio-extract'"
+        >
+          <div class="tool-icon">
+            <i class="fas fa-music"></i>
+          </div>
+          <h3 class="tool-title">Audio Extraction</h3>
+          <p class="tool-description">
+            Extract high-quality audio from videos in multiple formats with our
+            advanced audio processing technology.
+          </p>
+          <a href="/tools/audio-extract" class="tool-btn">
+            <i class="fas fa-download"></i>
+            Extract Audio
+          </a>
+        </div>
+
+        <div
+          class="tool-card"
+          onclick="window.location.href='/tools/audio-clean'"
+        >
+          <div class="tool-icon">
+            <i class="fas fa-microphone"></i>
+          </div>
+          <h3 class="tool-title">Audio Cleaning</h3>
+          <p class="tool-description">
+            Clean up audio files by removing unwanted content and replacing with
+            natural voice alternatives.
+          </p>
+          <a href="/tools/audio-clean" class="tool-btn">
+            <i class="fas fa-broom"></i>
+            Clean Audio
+          </a>
+        </div>
+
+        <div
+          class="tool-card"
+          onclick="window.location.href='/tools/video-merge'"
+        >
+          <div class="tool-icon">
+            <i class="fas fa-layer-group"></i>
+          </div>
+          <h3 class="tool-title">Video & Audio Merge</h3>
+          <p class="tool-description">
+            Combine cleaned audio with original video to create
+            professional-quality content seamlessly.
+          </p>
+          <a href="/tools/video-merge" class="tool-btn">
+            <i class="fas fa-link"></i>
+            Merge Files
+          </a>
+        </div>
+
+        <div
+          class="tool-card"
+          onclick="window.location.href='/tools/transcription'"
+        >
+          <div class="tool-icon">
+            <i class="fas fa-file-alt"></i>
+          </div>
+          <h3 class="tool-title">Transcription Analysis</h3>
+          <p class="tool-description">
+            Get PDF transcriptions with profane words striked out and detailed
+            counts of offensive content in your audio/video files.
+          </p>
+          <a href="/tools/transcription" class="tool-btn">
+            <i class="fas fa-chart-bar"></i>
+            Analyze Content
+          </a>
+        </div>
+
+        <div
+          class="tool-card"
+          onclick="window.location.href='/tools/profanity-report'"
+        >
+          <div class="tool-icon">
+            <i class="fas fa-search"></i>
+          </div>
+          <h3 class="tool-title">Profanity Detection</h3>
+          <p class="tool-description">
+            Get detailed reports showing exact profane words and their locations
+            in your audio/video files with severity analysis.
+          </p>
+          <a href="/tools/profanity-report" class="tool-btn">
+            <i class="fas fa-exclamation-triangle"></i>
+            Detect Profanity
+          </a>
+        </div>
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-content">
+        <p>
+          &copy; 2024 NoProfanity. Professional video audio cleaning technology.
+        </p>
+      </div>
+    </footer>
+
+    <script>
+      // Add blink effect to navigation links
+      document.querySelectorAll(".nav-link").forEach((link) => {
+        link.addEventListener("click", function () {
+          this.classList.add("blink");
+          setTimeout(() => {
+            this.classList.remove("blink");
+          }, 300);
+        });
+      });
+    </script>
+  </body>
+</html>
