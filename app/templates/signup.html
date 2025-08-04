@@ -4,43 +4,30 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Sign Up - NoProfanity</title>
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet" />
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+    <link
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"
+      rel="stylesheet"
+    />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
     <style>
+      /* Replace your <style> section with this for three-color, card-style, wide navbar */
       :root {
-        --bg-primary: #000000;
-        --bg-secondary: #0a0a0a;
-        --bg-accent: #1a1a1a;
-        --text-primary: #ffffff;
-        --text-secondary: #cccccc;
-        --text-accent: #ffd700;
-        --border-color: #000080;
-        --shadow: 0 4px 20px rgba(0, 128, 0, 0.3);
-        --primary-color: #ffd700;
-        --secondary-color: #000080;
-        --accent-color: #00ff00;
-        --highlight-gold: #ffd700;
-        --highlight-navy: #000080;
-        --highlight-green: #00ff00;
-        --navy-blue: #000080;
-        --error-color: #ff4444;
-        --success-color: #00ff88;
-      }
-
-      * {
-        margin: 0;
-        padding: 0;
-        box-sizing: border-box;
+        --black: #000;
+        --gold: #d4af37;
+        --white: #fff;
       }
 
       body {
         font-family: "Inter", sans-serif;
-        background: #000000;
-        color: var(--text-primary);
+        background: var(--black);
+        color: var(--white);
         min-height: 100vh;
-        line-height: 1.6;
       }
 
+      /* --- NAVBAR STYLES FROM video_clean.html --- */
       .header {
         position: fixed;
         top: 0;
@@ -48,15 +35,15 @@
         right: 0;
         background: rgba(0, 0, 0, 0.95);
         backdrop-filter: blur(20px);
-        border-bottom: 2px solid var(--border-color);
+        border-bottom: 2px solid #000;
         z-index: 1000;
-        box-shadow: 0 2px 20px rgba(0, 128, 0, 0.3);
+        box-shadow: 0 2px 20px rgba(212, 175, 55, 0.2);
       }
 
       .header-content {
         max-width: 1200px;
         margin: 0 auto;
-        padding: 0.75rem 1rem;
+        padding: 1.125rem 1rem;
         display: flex;
         justify-content: space-between;
         align-items: center;
@@ -68,38 +55,39 @@
         gap: 0.5rem;
         font-size: 1.5rem;
         font-weight: 700;
-        color: var(--highlight-gold);
+        color: #d4af37;
         text-decoration: none;
-        text-shadow: 0 0 10px rgba(255, 215, 0, 0.5);
+        text-shadow: 0 0 5px rgba(212, 175, 55, 0.3);
       }
 
       .logo-icon {
-        width: 40px;
-        height: 40px;
-        background: var(--highlight-gold);
+        width: 32px;
+        height: 32px;
+        background: #d4af37;
         border-radius: 50%;
         display: flex;
         align-items: center;
         justify-content: center;
-        box-shadow: 0 0 20px rgba(255, 215, 0, 0.6);
-        border: 2px solid var(--highlight-gold);
+        box-shadow: 0 0 10px rgba(212, 175, 55, 0.4);
+        border: 2px solid #d4af37;
         animation: glow 2s ease-in-out infinite alternate;
       }
 
       @keyframes glow {
-        from { box-shadow: 0 0 20px rgba(255, 215, 0, 0.6); }
-        to { box-shadow: 0 0 30px rgba(255, 215, 0, 0.8); }
+        from {
+          box-shadow: 0 0 10px rgba(212, 175, 55, 0.4);
+        }
+        to {
+          box-shadow: 0 0 15px rgba(212, 175, 55, 0.5);
+        }
       }
 
       .logo-icon::before {
         content: "NP";
-        font-size: 1rem;
+        font-size: 1.2rem;
         font-weight: 700;
-        color: #000000;
-        z-index: 2;
-        position: relative;
+        color: #000;
         font-family: "Inter", sans-serif;
-        letter-spacing: -0.5px;
       }
 
       .nav-links {
@@ -109,7 +97,7 @@
       }
 
       .nav-link {
-        color: var(--text-secondary);
+        color: #cccccc;
         text-decoration: none;
         font-weight: 500;
         transition: all 0.3s ease;
@@ -121,19 +109,18 @@
       }
 
       .nav-link:hover {
-        color: var(--highlight-gold);
-        background: rgba(255, 215, 0, 0.1);
+        color: #d4af37;
         transform: translateY(-2px);
       }
 
       .nav-link::after {
-        content: '';
+        content: "";
         position: absolute;
         bottom: 0;
         left: 50%;
         width: 0;
         height: 2px;
-        background: var(--highlight-gold);
+        background: #d4af37;
         transition: all 0.3s ease;
         transform: translateX(-50%);
       }
@@ -147,13 +134,20 @@
       }
 
       @keyframes blink {
-        0% { opacity: 1; }
-        50% { opacity: 0.5; }
-        100% { opacity: 1; }
+        0% {
+          opacity: 1;
+        }
+        50% {
+          opacity: 0.5;
+        }
+        100% {
+          opacity: 1;
+        }
       }
+      /* --- END NAVBAR STYLES --- */
 
       .main-content {
-        padding-top: 100px;
+        padding-top: 120px;
         min-height: 100vh;
         display: flex;
         align-items: center;
@@ -161,76 +155,84 @@
       }
 
       .signup-container {
-        background: var(--bg-accent);
-        border: 2px solid var(--border-color);
-        border-radius: 16px;
-        padding: 3rem 2rem;
-        box-shadow: var(--shadow);
-        max-width: 600px;
-        width: 90%;
+        background: var(--black);
+        border: 2px solid var(--gold);
+        border-radius: 24px;
+        padding: 2.5rem 2rem;
+        box-shadow: 0 8px 32px rgba(212, 175, 55, 0.15);
+        max-width: 520px;
+        width: 100%;
       }
 
       .signup-title {
         font-size: 2.5rem;
         font-weight: 700;
-        color: var(--highlight-gold);
+        color: var(--gold);
         text-align: center;
         margin-bottom: 2rem;
-        text-shadow: 0 0 30px rgba(255, 215, 0, 0.5);
+        text-shadow: 0 0 15px rgba(212, 175, 55, 0.3);
       }
 
       .form-row {
         display: flex;
         gap: 1rem;
         margin-bottom: 1.5rem;
+        flex-wrap: wrap;
       }
 
       .form-group {
-        flex: 1;
+        flex: 1 1 150px;
+        min-width: 0;
+        max-width: 220px; /* Prevents label/input from crossing container */
+        display: flex;
+        flex-direction: column;
       }
 
       .form-group.full-width {
-        flex: none;
-        width: 100%;
+        flex: 1 1 100%;
+        max-width: 100%;
       }
 
       .form-label {
         display: block;
         font-weight: 600;
-        color: var(--text-primary);
+        color: var(--white);
         margin-bottom: 0.5rem;
         font-size: 1rem;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
       }
 
       .form-label.required::after {
         content: " *";
-        color: var(--error-color);
+        color: var(--gold);
       }
 
       .form-input {
         width: 100%;
         padding: 1rem;
-        background: var(--bg-secondary);
-        border: 2px solid var(--border-color);
+        background: var(--black);
+        border: 2px solid var(--gold);
         border-radius: 8px;
-        color: var(--text-primary);
+        color: var(--white);
         font-size: 1rem;
-        transition: all 0.3s ease;
+        transition: border 0.3s, box-shadow 0.3s;
         font-family: "Inter", sans-serif;
       }
 
       .form-input:focus {
         outline: none;
-        border-color: var(--highlight-gold);
-        box-shadow: 0 0 10px rgba(255, 215, 0, 0.3);
+        border-color: var(--white);
+        box-shadow: 0 0 10px rgba(212, 175, 55, 0.3);
       }
 
       .form-input.error {
-        border-color: var(--error-color);
+        border-color: #ff4444;
       }
 
       .error-message {
-        color: var(--error-color);
+        color: #ff4444;
         font-size: 0.875rem;
         margin-top: 0.5rem;
         display: none;
@@ -242,41 +244,43 @@
 
       .signup-btn {
         width: 100%;
-        background: linear-gradient(135deg, var(--highlight-gold), #ffed4e);
-        color: #000000;
+        background: var(--gold);
+        color: var(--black);
         padding: 1rem 2rem;
         border-radius: 25px;
         text-decoration: none;
         font-weight: 600;
-        transition: all 0.3s ease;
+        transition: background 0.3s, color 0.3s;
         border: none;
         cursor: pointer;
         font-size: 1rem;
-        box-shadow: 0 4px 15px rgba(255, 215, 0, 0.3);
+        box-shadow: 0 4px 15px rgba(212, 175, 55, 0.18);
         font-family: "Inter", sans-serif;
         margin-top: 1rem;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 0.75rem;
       }
 
       .signup-btn:hover {
-        transform: translateY(-3px);
-        box-shadow: 0 6px 20px rgba(255, 215, 0, 0.5);
-        background: linear-gradient(135deg, #ffed4e, var(--highlight-gold));
+        background: var(--white);
+        color: var(--gold);
       }
 
       .signup-btn:disabled {
         opacity: 0.6;
         cursor: not-allowed;
-        transform: none;
       }
 
       .login-link {
         text-align: center;
         margin-top: 2rem;
-        color: var(--text-secondary);
+        color: var(--white);
       }
 
       .login-link a {
-        color: var(--highlight-gold);
+        color: var(--gold);
         text-decoration: none;
         font-weight: 600;
       }
@@ -299,41 +303,47 @@
 
       .message.error {
         background: rgba(255, 68, 68, 0.1);
-        border: 1px solid var(--error-color);
-        color: var(--error-color);
+        border: 1px solid #ff4444;
+        color: #ff4444;
       }
 
       .message.info {
-        background: rgba(255, 215, 0, 0.1);
-        border: 1px solid var(--highlight-gold);
-        color: var(--highlight-gold);
+        background: rgba(212, 175, 55, 0.1);
+        border: 1px solid var(--gold);
+        color: var(--gold);
       }
 
       .footer {
-        background: var(--bg-primary);
+        background: var(--black);
         padding: 2rem 1rem;
         text-align: center;
-        border-top: 2px solid var(--border-color);
+        border-top: 2px solid var(--gold);
         margin-top: 2rem;
       }
 
       .footer p {
-        color: var(--text-secondary);
-        font-size: 0.9rem;
+        color: var(--gold);
+        font-size: 1rem;
+        font-weight: 600;
       }
 
-      @media (max-width: 768px) {
-        .signup-title {
-          font-size: 2rem;
+      @media (max-width: 900px) {
+        .header-content {
+          max-width: 98vw;
+          padding: 1rem 0.5rem;
         }
-
+        .nav-links {
+          gap: 1.5rem;
+        }
         .signup-container {
-          padding: 2rem 1.5rem;
+          padding: 1.5rem 0.5rem;
         }
-
         .form-row {
           flex-direction: column;
           gap: 0;
+        }
+        .form-group {
+          max-width: 100%;
         }
       }
     </style>
@@ -357,41 +367,94 @@
     <main class="main-content">
       <div class="signup-container">
         <h1 class="signup-title">Sign Up</h1>
-        
+
         <form id="signupForm">
           <div class="form-row">
             <div class="form-group">
-              <label for="firstName" class="form-label required">First Name</label>
-              <input type="text" id="firstName" name="firstName" class="form-input" required>
-              <div class="error-message" id="firstNameError">First name is required</div>
+              <label for="firstName" class="form-label required"
+                >First Name</label
+              >
+              <input
+                type="text"
+                id="firstName"
+                name="firstName"
+                class="form-input"
+                required
+              />
+              <div class="error-message" id="firstNameError">
+                First name is required
+              </div>
             </div>
             <div class="form-group">
               <label for="middleName" class="form-label">Middle Name</label>
-              <input type="text" id="middleName" name="middleName" class="form-input">
+              <input
+                type="text"
+                id="middleName"
+                name="middleName"
+                class="form-input"
+              />
             </div>
             <div class="form-group">
-              <label for="lastName" class="form-label required">Last Name</label>
-              <input type="text" id="lastName" name="lastName" class="form-input" required>
-              <div class="error-message" id="lastNameError">Last name is required</div>
+              <label for="lastName" class="form-label required"
+                >Last Name</label
+              >
+              <input
+                type="text"
+                id="lastName"
+                name="lastName"
+                class="form-input"
+                required
+              />
+              <div class="error-message" id="lastNameError">
+                Last name is required
+              </div>
             </div>
           </div>
 
           <div class="form-group full-width">
             <label for="email" class="form-label required">Email Address</label>
-            <input type="email" id="email" name="email" class="form-input" required>
-            <div class="error-message" id="emailError">Please enter a valid email address</div>
+            <input
+              type="email"
+              id="email"
+              name="email"
+              class="form-input"
+              required
+            />
+            <div class="error-message" id="emailError">
+              Please enter a valid email address
+            </div>
           </div>
 
           <div class="form-group full-width">
-            <label for="password" class="form-label required">Create Password</label>
-            <input type="password" id="password" name="password" class="form-input" required>
-            <div class="error-message" id="passwordError">Password must be at least 8 characters</div>
+            <label for="password" class="form-label required"
+              >Create Password</label
+            >
+            <input
+              type="password"
+              id="password"
+              name="password"
+              class="form-input"
+              required
+            />
+            <div class="error-message" id="passwordError">
+              Password must be at least 8 characters
+            </div>
           </div>
 
           <div class="form-group full-width">
-            <label for="confirmPassword" class="form-label required">Confirm Password</label>
-            <input type="password" id="confirmPassword" name="confirmPassword" class="form-input" required>
-            <div class="error-message" id="confirmPasswordError">Passwords do not match</div>
+            <label for="confirmPassword" class="form-label required"
+              >Confirm Password</label
+            >
+            <input
+              type="password"
+              id="confirmPassword"
+              name="confirmPassword"
+              class="form-input"
+              required
+            />
+            <div class="error-message" id="confirmPasswordError">
+              Passwords do not match
+            </div>
           </div>
 
           <button type="submit" class="signup-btn" id="signupBtn">
@@ -419,21 +482,23 @@
     </footer>
 
     <script>
-      const signupForm = document.getElementById('signupForm');
-      const firstNameInput = document.getElementById('firstName');
-      const lastNameInput = document.getElementById('lastName');
-      const emailInput = document.getElementById('email');
-      const passwordInput = document.getElementById('password');
-      const confirmPasswordInput = document.getElementById('confirmPassword');
-      const signupMessage = document.getElementById('signupMessage');
-      const signupBtn = document.getElementById('signupBtn');
+      const signupForm = document.getElementById("signupForm");
+      const firstNameInput = document.getElementById("firstName");
+      const lastNameInput = document.getElementById("lastName");
+      const emailInput = document.getElementById("email");
+      const passwordInput = document.getElementById("password");
+      const confirmPasswordInput = document.getElementById("confirmPassword");
+      const signupMessage = document.getElementById("signupMessage");
+      const signupBtn = document.getElementById("signupBtn");
 
       // Error elements
-      const firstNameError = document.getElementById('firstNameError');
-      const lastNameError = document.getElementById('lastNameError');
-      const emailError = document.getElementById('emailError');
-      const passwordError = document.getElementById('passwordError');
-      const confirmPasswordError = document.getElementById('confirmPasswordError');
+      const firstNameError = document.getElementById("firstNameError");
+      const lastNameError = document.getElementById("lastNameError");
+      const emailError = document.getElementById("emailError");
+      const passwordError = document.getElementById("passwordError");
+      const confirmPasswordError = document.getElementById(
+        "confirmPasswordError"
+      );
 
       // Email validation
       function validateEmail(email) {
@@ -443,24 +508,24 @@
 
       // Show error message
       function showError(input, errorElement, message) {
-        input.classList.add('error');
+        input.classList.add("error");
         errorElement.textContent = message;
-        errorElement.classList.add('show');
+        errorElement.classList.add("show");
       }
 
       // Hide error message
       function hideError(input, errorElement) {
-        input.classList.remove('error');
-        errorElement.classList.remove('show');
+        input.classList.remove("error");
+        errorElement.classList.remove("show");
       }
 
       // Validate form
       function validateForm() {
         let isValid = true;
-        
+
         // Validate first name
         if (!firstNameInput.value.trim()) {
-          showError(firstNameInput, firstNameError, 'First name is required');
+          showError(firstNameInput, firstNameError, "First name is required");
           isValid = false;
         } else {
           hideError(firstNameInput, firstNameError);
@@ -468,7 +533,7 @@
 
         // Validate last name
         if (!lastNameInput.value.trim()) {
-          showError(lastNameInput, lastNameError, 'Last name is required');
+          showError(lastNameInput, lastNameError, "Last name is required");
           isValid = false;
         } else {
           hideError(lastNameInput, lastNameError);
@@ -476,10 +541,14 @@
 
         // Validate email
         if (!emailInput.value.trim()) {
-          showError(emailInput, emailError, 'Email is required');
+          showError(emailInput, emailError, "Email is required");
           isValid = false;
         } else if (!validateEmail(emailInput.value.trim())) {
-          showError(emailInput, emailError, 'Please enter a valid email address');
+          showError(
+            emailInput,
+            emailError,
+            "Please enter a valid email address"
+          );
           isValid = false;
         } else {
           hideError(emailInput, emailError);
@@ -487,10 +556,14 @@
 
         // Validate password
         if (!passwordInput.value.trim()) {
-          showError(passwordInput, passwordError, 'Password is required');
+          showError(passwordInput, passwordError, "Password is required");
           isValid = false;
         } else if (passwordInput.value.length < 8) {
-          showError(passwordInput, passwordError, 'Password must be at least 8 characters');
+          showError(
+            passwordInput,
+            passwordError,
+            "Password must be at least 8 characters"
+          );
           isValid = false;
         } else {
           hideError(passwordInput, passwordError);
@@ -498,10 +571,18 @@
 
         // Validate confirm password
         if (!confirmPasswordInput.value.trim()) {
-          showError(confirmPasswordInput, confirmPasswordError, 'Please confirm your password');
+          showError(
+            confirmPasswordInput,
+            confirmPasswordError,
+            "Please confirm your password"
+          );
           isValid = false;
         } else if (confirmPasswordInput.value !== passwordInput.value) {
-          showError(confirmPasswordInput, confirmPasswordError, 'Passwords do not match');
+          showError(
+            confirmPasswordInput,
+            confirmPasswordError,
+            "Passwords do not match"
+          );
           isValid = false;
         } else {
           hideError(confirmPasswordInput, confirmPasswordError);
@@ -511,16 +592,17 @@
       }
 
       // Form submission
-      signupForm.addEventListener('submit', function(e) {
+      signupForm.addEventListener("submit", function (e) {
         e.preventDefault();
-        
+
         if (validateForm()) {
           signupBtn.disabled = true;
-          signupBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Creating Account...';
-          
+          signupBtn.innerHTML =
+            '<i class="fas fa-spinner fa-spin"></i> Creating Account...';
+
           // Show message after a short delay
           setTimeout(() => {
-            signupMessage.classList.add('show');
+            signupMessage.classList.add("show");
             signupBtn.disabled = false;
             signupBtn.innerHTML = '<i class="fas fa-user-plus"></i> Sign Up';
           }, 1000);
@@ -528,55 +610,59 @@
       });
 
       // Real-time validation
-      firstNameInput.addEventListener('blur', function() {
+      firstNameInput.addEventListener("blur", function () {
         if (!this.value.trim()) {
-          showError(this, firstNameError, 'First name is required');
+          showError(this, firstNameError, "First name is required");
         } else {
           hideError(this, firstNameError);
         }
       });
 
-      lastNameInput.addEventListener('blur', function() {
+      lastNameInput.addEventListener("blur", function () {
         if (!this.value.trim()) {
-          showError(this, lastNameError, 'Last name is required');
+          showError(this, lastNameError, "Last name is required");
         } else {
           hideError(this, lastNameError);
         }
       });
 
-      emailInput.addEventListener('blur', function() {
+      emailInput.addEventListener("blur", function () {
         if (this.value.trim() && !validateEmail(this.value.trim())) {
-          showError(this, emailError, 'Please enter a valid email address');
+          showError(this, emailError, "Please enter a valid email address");
         } else if (this.value.trim()) {
           hideError(this, emailError);
         }
       });
 
-      passwordInput.addEventListener('blur', function() {
+      passwordInput.addEventListener("blur", function () {
         if (this.value.trim() && this.value.length < 8) {
-          showError(this, passwordError, 'Password must be at least 8 characters');
+          showError(
+            this,
+            passwordError,
+            "Password must be at least 8 characters"
+          );
         } else if (this.value.trim()) {
           hideError(this, passwordError);
         }
       });
 
-      confirmPasswordInput.addEventListener('blur', function() {
+      confirmPasswordInput.addEventListener("blur", function () {
         if (this.value.trim() && this.value !== passwordInput.value) {
-          showError(this, confirmPasswordError, 'Passwords do not match');
+          showError(this, confirmPasswordError, "Passwords do not match");
         } else if (this.value.trim()) {
           hideError(this, confirmPasswordError);
         }
       });
 
       // Add blink effect to navigation links
-      document.querySelectorAll('.nav-link').forEach(link => {
-        link.addEventListener('click', function() {
-          this.classList.add('blink');
+      document.querySelectorAll(".nav-link").forEach((link) => {
+        link.addEventListener("click", function () {
+          this.classList.add("blink");
           setTimeout(() => {
-            this.classList.remove('blink');
+            this.classList.remove("blink");
           }, 300);
         });
       });
     </script>
   </body>
-</html> 
+</html>

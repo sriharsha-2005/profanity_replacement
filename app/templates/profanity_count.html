@@ -639,10 +639,10 @@
 
     <main class="main-content">
       <section class="tool-header">
-        <h1 class="tool-title">Video Audio Cleaning</h1>
+        <h1 class="tool-title">Profanity Detection Dashboard</h1>
         <p class="tool-subtitle">
-          Automatically detect and replace profanity in videos with
-          natural-sounding alternatives
+          Upload an audio or video file. View all detected profane words and
+          their timestamps.
         </p>
       </section>
 
@@ -659,7 +659,7 @@
               <i class="fas fa-cloud-upload-alt"></i>
             </div>
             <p class="upload-instructions">
-              Drag and drop your video file here or click to browse
+              Drag and drop your audio or video file here or click to browse
             </p>
             <p
               style="
@@ -668,49 +668,21 @@
                 margin-top: 1rem;
               "
             >
-              Supports MP4, AVI, MKV, MOV, WMV, FLV, and WebM formats (Max:
-              25MB)
+              Supports MP3, WAV, M4A, AAC, OGG, MP4, AVI, MKV, MOV, WMV, FLV,
+              WebM (Max: 25MB)
             </p>
             <input
               type="file"
-              id="videoFile"
-              name="video"
-              accept="video/*"
+              id="mediaFile"
+              name="media"
+              accept="audio/*,video/*"
               style="display: none"
             />
           </div>
-
           <div class="file-info" id="fileInfo">
             <div class="file-name" id="fileName"></div>
             <div class="file-size" id="fileSize"></div>
           </div>
-
-          <div class="voice-section">
-            <label class="voice-label">Choose Replacement Voice Style</label>
-            <div class="voice-options">
-              <div class="voice-option">
-                <input
-                  type="radio"
-                  id="female"
-                  name="gender"
-                  value="female"
-                  checked
-                />
-                <label for="female">
-                  <i class="fas fa-venus"></i>
-                  Female Voice
-                </label>
-              </div>
-              <div class="voice-option">
-                <input type="radio" id="male" name="gender" value="male" />
-                <label for="male">
-                  <i class="fas fa-mars"></i>
-                  Male Voice
-                </label>
-              </div>
-            </div>
-          </div>
-
           <div class="progress-container" id="progressContainer">
             <div class="clock-container">
               <div class="clock-face">
@@ -726,12 +698,49 @@
               Cancel Process
             </button>
           </div>
-
           <button type="submit" class="submit-btn" id="submitBtn" disabled>
-            <i class="fas fa-magic"></i>
-            <span id="submitText">Clean My Video</span>
+            <i class="fas fa-search"></i>
+            <span id="submitText">Detect Profanity</span>
           </button>
         </form>
+      </div>
+
+      <!-- Dashboard for results -->
+      <div
+        id="dashboard"
+        style="display: none; margin: 2rem auto; max-width: 600px"
+      >
+        <h2 style="color: var(--highlight-gold); text-align: center">
+          Detected Profane Words
+        </h2>
+        <table style="width: 100%; border-collapse: collapse; margin-top: 1rem">
+          <thead>
+            <tr
+              style="
+                background: var(--bg-secondary);
+                color: var(--highlight-gold);
+              "
+            >
+              <th
+                style="
+                  padding: 0.5rem;
+                  border-bottom: 1px solid var(--border-color);
+                "
+              >
+                Word
+              </th>
+              <th
+                style="
+                  padding: 0.5rem;
+                  border-bottom: 1px solid var(--border-color);
+                "
+              >
+                Timestamp
+              </th>
+            </tr>
+          </thead>
+          <tbody id="dashboardBody"></tbody>
+        </table>
       </div>
 
       <div class="download-popup" id="downloadPopup">
@@ -758,7 +767,7 @@
     <script>
       // File Upload
       const uploadArea = document.getElementById("uploadArea");
-      const videoFile = document.getElementById("videoFile");
+      const mediaFile = document.getElementById("mediaFile");
       const fileInfo = document.getElementById("fileInfo");
       const fileName = document.getElementById("fileName");
       const fileSize = document.getElementById("fileSize");
@@ -772,6 +781,8 @@
       const downloadText = document.getElementById("downloadText");
       const confirmDownload = document.getElementById("confirmDownload");
       const cancelDownload = document.getElementById("cancelDownload");
+      const dashboard = document.getElementById("dashboard");
+      const dashboardBody = document.getElementById("dashboardBody");
 
       let processing = false;
       let animationInterval;
@@ -779,7 +790,7 @@
       let currentProgress = 0;
 
       uploadArea.addEventListener("click", () => {
-        videoFile.click();
+        mediaFile.click();
       });
 
       uploadArea.addEventListener("dragover", (e) => {
@@ -800,7 +811,7 @@
         }
       });
 
-      videoFile.addEventListener("change", (e) => {
+      mediaFile.addEventListener("change", (e) => {
         if (e.target.files.length > 0) {
           handleFile(e.target.files[0]);
         }
@@ -808,35 +819,12 @@
 
       function handleFile(file) {
         const maxSize = 25 * 1024 * 1024; // 25MB
-
-        if (file.size > maxSize) {
-          const uploadInstructions = document.querySelector(
-            ".upload-instructions"
-          );
-          uploadInstructions.textContent =
-            "File size too large. Please upload a file smaller than 25MB.";
-          uploadInstructions.style.color = "var(--error-color)";
-          return;
-        }
-
-        const allowedTypes = [
-          "video/mp4",
-          "video/avi",
-          "video/mkv",
-          "video/mov",
-          "video/wmv",
-          "video/flv",
-          "video/webm",
-          "video/quicktime",
-          "video/x-msvideo",
-          "video/x-matroska",
-          "video/x-ms-wmv",
-          "video/x-flv",
-          "application/octet-stream",
-        ];
-
-        const fileExtension = "." + file.name.split(".").pop().toLowerCase();
         const allowedExtensions = [
+          ".mp3",
+          ".wav",
+          ".m4a",
+          ".aac",
+          ".ogg",
           ".mp4",
           ".avi",
           ".mkv",
@@ -845,26 +833,18 @@
           ".flv",
           ".webm",
         ];
-
-        const isValidType =
-          allowedTypes.includes(file.type) ||
-          allowedExtensions.includes(fileExtension);
-
-        if (!isValidType) {
-          const uploadInstructions = document.querySelector(
-            ".upload-instructions"
-          );
-          uploadInstructions.textContent =
-            "Unsupported format. Please select a video file.";
-          uploadInstructions.style.color = "var(--error-color)";
+        const fileExtension = "." + file.name.split(".").pop().toLowerCase();
+        if (file.size > maxSize || !allowedExtensions.includes(fileExtension)) {
+          fileName.textContent = "Invalid file.";
+          fileName.style.color = "var(--error-color)";
+          submitBtn.disabled = true;
           return;
         }
-
         fileName.textContent = file.name;
         fileSize.textContent = formatFileSize(file.size);
+        fileName.style.color = "var(--success-color)";
         fileInfo.classList.add("show");
         submitBtn.disabled = false;
-
         const uploadInstructions = document.querySelector(
           ".upload-instructions"
         );
@@ -909,7 +889,7 @@
         submitBtn.innerHTML =
           '<i class="fas fa-magic"></i> <span id="submitText">Clean My Video</span>';
         fileInfo.classList.remove("show");
-        videoFile.value = "";
+        mediaFile.value = "";
         const uploadInstructions = document.querySelector(
           ".upload-instructions"
         );
@@ -923,8 +903,9 @@
 
       uploadForm.addEventListener("submit", async (e) => {
         e.preventDefault();
-
-        if (!videoFile.files.length) {
+        dashboard.style.display = "none";
+        dashboardBody.innerHTML = "";
+        if (!mediaFile.files.length) {
           const uploadInstructions = document.querySelector(
             ".upload-instructions"
           );
@@ -932,17 +913,8 @@
           uploadInstructions.style.color = "var(--error-color)";
           return;
         }
-
         const formData = new FormData(uploadForm);
-        formData.append("option", "video-clean");
-
-        const selectedGender = document.querySelector(
-          'input[name="gender"]:checked'
-        );
-        if (selectedGender) {
-          formData.append("gender", selectedGender.value);
-        }
-
+        formData.append("option", "profanity-count");
         processing = true;
         progressContainer.classList.add("show");
         submitBtn.disabled = true;
@@ -969,40 +941,20 @@
           progressText.textContent = "Done!";
 
           if (response.ok) {
-            const contentType = response.headers.get("content-type");
-            if (contentType && contentType.includes("application/json")) {
-              const errorData = await response.json();
-              alert("Error: " + (errorData.error || "Processing failed"));
+            const result = await response.json();
+            if (result.words && result.words.length > 0) {
+              dashboard.style.display = "block";
+              result.words.forEach((item) => {
+                const tr = document.createElement("tr");
+                tr.innerHTML = `<td style="padding:0.5rem; border-bottom:1px solid var(--border-color);">${item.word}</td>
+                                <td style="padding:0.5rem; border-bottom:1px solid var(--border-color);">${item.timestamp}</td>`;
+                dashboardBody.appendChild(tr);
+              });
             } else {
-              const blob = await response.blob();
-              const url = window.URL.createObjectURL(blob);
-              const filename =
-                "CLEAN_" + videoFile.files[0].name.replace(/\.[^/.]+$/, ".mp4");
-
-              // Show download popup instead of automatically downloading
-              downloadText.textContent = `Want to download the ${filename}?`;
-              downloadPopup.classList.add("show");
-
-              // Set up download button
-              confirmDownload.onclick = function () {
-                const a = document.createElement("a");
-                a.href = url;
-                a.download = filename;
-                document.body.appendChild(a);
-                a.click();
-                document.body.removeChild(a);
-                window.URL.revokeObjectURL(url);
-                downloadPopup.classList.remove("show");
-                resetForm();
-              };
-
-              // Set up cancel button
-              cancelDownload.onclick = function () {
-                window.URL.revokeObjectURL(url);
-                downloadPopup.classList.remove("show");
-                resetForm();
-              };
+              dashboard.style.display = "block";
+              dashboardBody.innerHTML = `<tr><td colspan="2" style="padding:1rem; color:var(--error-color); text-align:center;">No profane words detected.</td></tr>`;
             }
+            resetForm();
           } else {
             const contentType = response.headers.get("content-type");
             if (contentType && contentType.includes("application/json")) {

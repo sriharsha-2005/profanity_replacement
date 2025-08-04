@@ -14,23 +14,9 @@
     />
     <style>
       :root {
-        --bg-primary: #000000;
-        --bg-secondary: #0a0a0a;
-        --bg-accent: #1a1a1a;
-        --text-primary: #ffffff;
-        --text-secondary: #cccccc;
-        --text-accent: #d4af37;
-        --border-color: #000000;
-        --shadow: 0 4px 20px rgba(212, 175, 55, 0.2);
-        --primary-color: #d4af37;
-        --secondary-color: #000000;
-        --accent-color: #ffffff;
-        --highlight-gold: #d4af37;
-        --highlight-navy: #000000;
-        --highlight-green: #ffffff;
-        --navy-blue: #000000;
-        --error-color: #ff4444;
-        --success-color: #00ff88;
+        --black: #000;
+        --gold: #d4af37;
+        --white: #fff;
       }
 
       * {
@@ -41,8 +27,8 @@
 
       body {
         font-family: "Inter", sans-serif;
-        background: #000000;
-        color: var(--text-primary);
+        background: var(--black);
+        color: var(--white);
         min-height: 100vh;
         line-height: 1.6;
       }
@@ -52,17 +38,16 @@
         top: 0;
         left: 0;
         right: 0;
-        background: rgba(0, 0, 0, 0.95);
-        backdrop-filter: blur(20px);
-        border-bottom: 2px solid var(--border-color);
+        background: var(--black);
+        border-bottom: 2px solid var(--gold);
         z-index: 1000;
         box-shadow: 0 2px 20px rgba(212, 175, 55, 0.2);
       }
 
       .header-content {
-        max-width: 1200px;
+        max-width: 1800px; /* doubled width */
         margin: 0 auto;
-        padding: 1.125rem 1rem;
+        padding: 1.5rem 2rem;
         display: flex;
         justify-content: space-between;
         align-items: center;
@@ -72,83 +57,54 @@
         display: flex;
         align-items: center;
         gap: 0.5rem;
-        font-size: 1.5rem;
+        font-size: 2rem;
         font-weight: 700;
-        color: var(--highlight-gold);
+        color: var(--gold);
         text-decoration: none;
         text-shadow: 0 0 5px rgba(212, 175, 55, 0.3);
       }
 
       .logo-icon {
-        width: 32px;
-        height: 32px;
-        background: var(--highlight-gold);
+        width: 40px;
+        height: 40px;
+        background: var(--gold);
         border-radius: 50%;
         display: flex;
         align-items: center;
         justify-content: center;
         box-shadow: 0 0 10px rgba(212, 175, 55, 0.4);
-        border: 2px solid var(--highlight-gold);
-        animation: glow 2s ease-in-out infinite alternate;
-      }
-
-      @keyframes glow {
-        from {
-          box-shadow: 0 0 10px rgba(212, 175, 55, 0.4);
-        }
-        to {
-          box-shadow: 0 0 15px rgba(212, 175, 55, 0.5);
-        }
+        border: 2px solid var(--gold);
       }
 
       .logo-icon::before {
         content: "S";
-        font-size: 1rem;
+        font-size: 1.2rem;
         font-weight: 700;
-        color: #000000;
-        z-index: 2;
-        position: relative;
+        color: var(--black);
         font-family: "Inter", sans-serif;
-        letter-spacing: -0.5px;
       }
 
       .nav-links {
         display: flex;
         align-items: center;
-        gap: 2rem;
+        gap: 4rem; /* doubled gap */
       }
 
       .nav-link {
-        color: var(--text-secondary);
+        color: var(--white);
         text-decoration: none;
-        font-weight: 500;
-        transition: all 0.3s ease;
+        font-weight: 600;
+        font-size: 1.1rem;
+        padding: 0.7rem 2rem;
+        border-radius: 12px;
+        background: var(--black);
+        transition: background 0.3s, color 0.3s;
         position: relative;
-        cursor: pointer;
-        font-size: 1rem;
-        padding: 0.5rem 1rem;
-        border-radius: 8px;
       }
 
       .nav-link:hover {
-        color: var(--highlight-gold);
-        transform: translateY(-2px);
-      }
-
-      .nav-link::after {
-        content: "";
-        position: absolute;
-        bottom: 0;
-        left: 50%;
-        width: 0;
-        height: 2px;
-        background: var(--highlight-gold);
-        transition: all 0.3s ease;
-        transform: translateX(-50%);
-      }
-
-      .nav-link:hover::after {
-        width: 80%;
+        color: var(--gold);
+        background: var(--white);
       }
 
       .nav-link.blink {
@@ -168,66 +124,64 @@
       }
 
       .main-content {
-        padding-top: 100px;
+        padding-top: 120px;
         min-height: 100vh;
       }
 
       .tool-header {
         text-align: center;
-        padding: 3rem 1rem;
-        background: #000000;
+        padding: 2.5rem 1rem 1rem 1rem;
+        background: var(--black);
       }
 
       .tool-title {
         font-size: 2.5rem;
         font-weight: 700;
-        color: var(--highlight-gold);
+        color: var(--gold);
         margin-bottom: 1rem;
         text-shadow: 0 0 15px rgba(212, 175, 55, 0.3);
       }
 
       .tool-subtitle {
         font-size: 1.1rem;
-        color: var(--text-secondary);
+        color: var(--white);
         max-width: 600px;
         margin: 0 auto;
       }
 
       .upload-container {
-        max-width: 600px;
+        max-width: 520px;
         margin: 2rem auto;
-        background: var(--bg-accent);
-        border: 2px solid var(--border-color);
-        border-radius: 16px;
-        padding: 2rem;
-        box-shadow: var(--shadow);
+        background: var(--black);
+        border: 2px solid var(--gold);
+        border-radius: 24px;
+        padding: 2.5rem 2rem;
+        box-shadow: 0 8px 32px rgba(212, 175, 55, 0.15);
       }
 
       .upload-title {
         font-size: 1.5rem;
         font-weight: 600;
-        color: var(--highlight-gold);
+        color: var(--gold);
         text-align: center;
         margin-bottom: 1rem;
       }
 
       .upload-subtitle {
-        color: var(--text-secondary);
+        color: var(--white);
         text-align: center;
         margin-bottom: 1.5rem;
-        font-size: 0.95rem;
+        font-size: 1rem;
       }
 
       .upload-area {
-        border: 2px solid var(--border-color);
-        border-radius: 12px;
+        border: 2px dashed var(--gold);
+        border-radius: 16px;
         padding: 2rem 1.5rem;
         text-align: center;
         cursor: pointer;
-        transition: all 0.3s ease;
-        background: var(--bg-secondary);
-        position: relative;
-        overflow: hidden;
+        background: var(--black);
+        transition: border 0.3s, background 0.3s;
         min-height: 150px;
         display: flex;
         flex-direction: column;
@@ -235,27 +189,21 @@
         align-items: center;
       }
 
-      .upload-area:hover {
-        border-color: var(--highlight-gold);
-        background: rgba(212, 175, 55, 0.05);
-        transform: scale(1.02);
-      }
-
+      .upload-area:hover,
       .upload-area.dragover {
-        border-color: var(--highlight-gold);
-        background: rgba(212, 175, 55, 0.1);
-        transform: scale(1.02);
+        border-color: var(--white);
+        background: var(--gold);
+        color: var(--black);
       }
 
       .upload-icon {
         font-size: 3rem;
-        color: var(--highlight-gold);
+        color: var(--gold);
         margin-bottom: 1rem;
-        text-shadow: 0 0 10px rgba(212, 175, 55, 0.3);
       }
 
       .upload-instructions {
-        color: var(--text-secondary);
+        color: var(--white);
         margin-bottom: 0.5rem;
         font-size: 1rem;
       }
@@ -264,9 +212,9 @@
         display: none;
         margin-top: 1rem;
         padding: 1rem;
-        background: var(--bg-secondary);
+        background: var(--black);
         border-radius: 8px;
-        border: 1px solid var(--border-color);
+        border: 1px solid var(--gold);
       }
 
       .file-info.show {
@@ -275,116 +223,13 @@
 
       .file-name {
         font-weight: 600;
-        color: var(--text-primary);
+        color: var(--white);
         margin-bottom: 0.5rem;
       }
 
       .file-size {
-        color: var(--text-secondary);
-        font-size: 0.875rem;
-      }
-
-      .voice-section {
-        margin: 1.5rem 0;
-      }
-
-      .voice-label {
-        display: block;
-        font-weight: 600;
-        margin-bottom: 1rem;
-        color: var(--text-primary);
-        font-size: 1rem;
-        text-align: center;
-      }
-
-      .voice-options {
-        display: flex;
-        justify-content: center;
-        gap: 1rem;
-        margin-bottom: 1.5rem;
-        flex-wrap: wrap;
-      }
-
-      .voice-option {
-        position: relative;
-        cursor: pointer;
-        flex: 1;
-        min-width: 120px;
-      }
-
-      .voice-option input[type="radio"] {
-        display: none;
-      }
-
-      .voice-option label {
-        display: flex;
-        align-items: center;
-        gap: 0.75rem;
-        padding: 0.75rem 1rem;
-        background: var(--bg-secondary);
-        border: 2px solid var(--border-color);
-        border-radius: 12px;
-        cursor: pointer;
-        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-        font-weight: 600;
-        color: var(--text-primary);
-        font-size: 1rem;
-        justify-content: center;
-        position: relative;
-        overflow: hidden;
-        width: 100%;
-      }
-
-      .voice-option input[type="radio"]:checked + label {
-        border-color: var(--highlight-gold);
-        background: rgba(212, 175, 55, 0.1);
-        box-shadow: var(--shadow);
-        transform: translateY(-2px);
-      }
-
-      .voice-option label:hover {
-        border-color: var(--highlight-gold);
-        transform: translateY(-1px);
-        box-shadow: var(--shadow);
-      }
-
-      .voice-option i {
-        font-size: 1.25rem;
-        color: var(--highlight-gold);
-        z-index: 2;
-        position: relative;
-      }
-
-      .submit-btn {
-        background: linear-gradient(135deg, var(--highlight-gold), #e6c84e);
-        color: #000000;
-        border: none;
-        padding: 0.8rem 1.5rem;
-        border-radius: 25px;
-        font-size: 1rem;
-        font-weight: 600;
-        cursor: pointer;
-        transition: all 0.3s ease;
-        width: 100%;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        gap: 0.75rem;
-        box-shadow: var(--shadow);
-        font-family: "Inter", sans-serif;
-        margin-top: 1rem;
-      }
-
-      .submit-btn:hover {
-        transform: translateY(-3px);
-        box-shadow: 0 6px 15px rgba(212, 175, 55, 0.3);
-        background: linear-gradient(135deg, #e6c84e, var(--highlight-gold));
-      }
-
-      .submit-btn:disabled {
-        opacity: 0.6;
-        cursor: not-allowed;
-        transform: none;
+        color: var(--gold);
+        font-size: 0.95rem;
       }
 
       .progress-container {
@@ -398,7 +243,7 @@
       }
 
       .clock-container {
-        width: 45px; /* 1/4th smaller than 60px */
+        width: 45px;
         height: 45px;
         margin: 0 auto 0.5rem;
         position: relative;
@@ -407,58 +252,50 @@
       .clock-face {
         width: 100%;
         height: 100%;
-        border: 2px solid var(--highlight-gold); /* slightly thinner border */
+        border: 2px solid var(--gold);
         border-radius: 50%;
         position: relative;
         box-shadow: 0 0 6px rgba(212, 175, 55, 0.15);
+      }
+
+      .clock-hour,
+      .clock-minute,
+      .clock-second {
+        background: var(--gold);
+        position: absolute;
+        left: 50%;
+        transform-origin: bottom center;
+        border-radius: 2px;
       }
 
       .clock-hour {
         width: 2px;
         height: 11px;
         top: 11px;
-        left: 50%;
-        background: var(--highlight-gold);
-        position: absolute;
-        transform-origin: bottom center;
         transform: translateX(-50%) rotate(0deg);
         z-index: 3;
-        border-radius: 2px;
         animation: hourRotate 24s linear infinite;
       }
-
       .clock-minute {
         width: 1.5px;
         height: 16px;
         top: 6px;
-        left: 50%;
-        background: var(--highlight-gold);
-        position: absolute;
-        transform-origin: bottom center;
         transform: translateX(-50%) rotate(0deg);
         z-index: 2;
-        border-radius: 2px;
         animation: minuteRotate 6s linear infinite;
       }
-
       .clock-second {
         width: 1px;
         height: 21px;
         top: 1px;
-        left: 50%;
-        background: var(--highlight-gold);
-        position: absolute;
-        transform-origin: bottom center;
         transform: translateX(-50%) rotate(0deg);
         z-index: 1;
-        border-radius: 1.5px;
         animation: secondRotate 1s linear infinite;
       }
-
       .clock-center {
         width: 5px;
         height: 5px;
-        background: var(--highlight-gold);
+        background: var(--gold);
         border-radius: 50%;
         position: absolute;
         top: 50%;
@@ -492,27 +329,65 @@
         }
       }
 
+      .progress-percentage {
+        text-align: center;
+        color: var(--gold);
+        font-size: 1rem;
+        font-weight: 600;
+        margin-bottom: 0.5rem;
+        margin-top: -0.5rem;
+      }
+
       .progress-text {
         text-align: center;
-        color: var(--text-secondary);
-        font-size: 0.875rem;
+        color: var(--white);
+        font-size: 0.95rem;
         margin-bottom: 1rem;
       }
 
       .cancel-btn {
         background: transparent;
-        color: var(--highlight-gold);
-        border: 1px solid var(--highlight-gold);
+        color: var(--gold);
+        border: 1px solid var(--gold);
         padding: 0.5rem 1rem;
         border-radius: 25px;
         font-size: 0.9rem;
         font-weight: 500;
         cursor: pointer;
-        transition: all 0.3s ease;
+        transition: background 0.3s;
       }
 
       .cancel-btn:hover {
-        background: rgba(212, 175, 55, 0.1);
+        background: var(--gold);
+        color: var(--black);
+      }
+
+      .submit-btn {
+        background: var(--gold);
+        color: var(--black);
+        border: none;
+        padding: 0.8rem 1.5rem;
+        border-radius: 25px;
+        font-size: 1rem;
+        font-weight: 600;
+        cursor: pointer;
+        transition: background 0.3s, color 0.3s;
+        width: 100%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 0.75rem;
+        margin-top: 1rem;
+      }
+
+      .submit-btn:hover {
+        background: var(--white);
+        color: var(--gold);
+      }
+
+      .submit-btn:disabled {
+        opacity: 0.6;
+        cursor: not-allowed;
       }
 
       .download-popup {
@@ -533,18 +408,18 @@
       }
 
       .download-content {
-        background: var(--bg-accent);
+        background: var(--black);
         padding: 2rem;
         border-radius: 16px;
         text-align: center;
         max-width: 500px;
         width: 90%;
-        border: 2px solid var(--highlight-gold);
+        border: 2px solid var(--gold);
       }
 
       .download-text {
         margin-bottom: 1.5rem;
-        color: var(--text-primary);
+        color: var(--white);
       }
 
       .download-buttons {
@@ -554,69 +429,63 @@
       }
 
       .download-btn {
-        background: var(--highlight-gold);
-        color: #000000;
+        background: var(--gold);
+        color: var(--black);
         border: none;
         padding: 0.75rem 1.5rem;
         border-radius: 25px;
         font-size: 1rem;
         font-weight: 600;
         cursor: pointer;
-        transition: all 0.3s ease;
+        transition: background 0.3s, color 0.3s;
       }
 
       .download-btn:hover {
-        background: #e6c84e;
-        transform: translateY(-2px);
+        background: var(--white);
+        color: var(--gold);
       }
 
       .popup-cancel-btn {
         background: transparent;
-        color: var(--highlight-gold);
-        border: 1px solid var(--highlight-gold);
+        color: var(--gold);
+        border: 1px solid var(--gold);
         padding: 0.75rem 1.5rem;
         border-radius: 25px;
         font-size: 1rem;
         font-weight: 600;
         cursor: pointer;
-        transition: all 0.3s ease;
+        transition: background 0.3s, color 0.3s;
       }
 
       .popup-cancel-btn:hover {
-        background: rgba(212, 175, 55, 0.1);
+        background: var(--gold);
+        color: var(--black);
       }
 
       .footer {
-        background: var(--bg-primary);
+        background: var(--black);
         padding: 2rem 1rem;
         text-align: center;
-        border-top: 2px solid var(--border-color);
+        border-top: 2px solid var(--gold);
         margin-top: 2rem;
       }
 
       .footer p {
-        color: var(--text-secondary);
-        font-size: 0.9rem;
+        color: var(--gold);
+        font-size: 1rem;
+        font-weight: 600;
       }
 
-      @media (max-width: 768px) {
-        .tool-title {
-          font-size: 2rem;
+      @media (max-width: 900px) {
+        .header-content {
+          max-width: 98vw;
+          padding: 1rem 0.5rem;
         }
-
+        .nav-links {
+          gap: 1.5rem;
+        }
         .upload-container {
-          margin: 1rem;
-          padding: 1.5rem;
-        }
-
-        .voice-options {
-          flex-direction: column;
-          align-items: center;
-        }
-
-        .voice-option {
-          width: 100%;
-          max-width: 250px;
+          padding: 1.5rem 0.5rem;
         }
       }
     </style>
@@ -639,10 +508,10 @@
 
     <main class="main-content">
       <section class="tool-header">
-        <h1 class="tool-title">Video Audio Cleaning</h1>
+        <h1 class="tool-title">Transcribe Audio or Video</h1>
         <p class="tool-subtitle">
-          Automatically detect and replace profanity in videos with
-          natural-sounding alternatives
+          Upload an audio or video file. Get a PDF transcript with profane words
+          lightly struck off and a watermark logo.
         </p>
       </section>
 
@@ -659,7 +528,7 @@
               <i class="fas fa-cloud-upload-alt"></i>
             </div>
             <p class="upload-instructions">
-              Drag and drop your video file here or click to browse
+              Drag and drop your audio or video file here or click to browse
             </p>
             <p
               style="
@@ -668,14 +537,14 @@
                 margin-top: 1rem;
               "
             >
-              Supports MP4, AVI, MKV, MOV, WMV, FLV, and WebM formats (Max:
-              25MB)
+              Supports MP3, WAV, M4A, AAC, OGG, MP4, AVI, MKV, MOV, WMV, FLV,
+              WebM (Max: 25MB)
             </p>
             <input
               type="file"
-              id="videoFile"
-              name="video"
-              accept="video/*"
+              id="mediaFile"
+              name="media"
+              accept="audio/*,video/*"
               style="display: none"
             />
           </div>
@@ -683,32 +552,6 @@
           <div class="file-info" id="fileInfo">
             <div class="file-name" id="fileName"></div>
             <div class="file-size" id="fileSize"></div>
-          </div>
-
-          <div class="voice-section">
-            <label class="voice-label">Choose Replacement Voice Style</label>
-            <div class="voice-options">
-              <div class="voice-option">
-                <input
-                  type="radio"
-                  id="female"
-                  name="gender"
-                  value="female"
-                  checked
-                />
-                <label for="female">
-                  <i class="fas fa-venus"></i>
-                  Female Voice
-                </label>
-              </div>
-              <div class="voice-option">
-                <input type="radio" id="male" name="gender" value="male" />
-                <label for="male">
-                  <i class="fas fa-mars"></i>
-                  Male Voice
-                </label>
-              </div>
-            </div>
           </div>
 
           <div class="progress-container" id="progressContainer">
@@ -728,8 +571,8 @@
           </div>
 
           <button type="submit" class="submit-btn" id="submitBtn" disabled>
-            <i class="fas fa-magic"></i>
-            <span id="submitText">Clean My Video</span>
+            <i class="fas fa-file-pdf"></i>
+            <span id="submitText">Get PDF Transcript</span>
           </button>
         </form>
       </div>
@@ -758,7 +601,7 @@
     <script>
       // File Upload
       const uploadArea = document.getElementById("uploadArea");
-      const videoFile = document.getElementById("videoFile");
+      const mediaFile = document.getElementById("mediaFile");
       const fileInfo = document.getElementById("fileInfo");
       const fileName = document.getElementById("fileName");
       const fileSize = document.getElementById("fileSize");
@@ -779,7 +622,7 @@
       let currentProgress = 0;
 
       uploadArea.addEventListener("click", () => {
-        videoFile.click();
+        mediaFile.click();
       });
 
       uploadArea.addEventListener("dragover", (e) => {
@@ -800,7 +643,7 @@
         }
       });
 
-      videoFile.addEventListener("change", (e) => {
+      mediaFile.addEventListener("change", (e) => {
         if (e.target.files.length > 0) {
           handleFile(e.target.files[0]);
         }
@@ -808,35 +651,12 @@
 
       function handleFile(file) {
         const maxSize = 25 * 1024 * 1024; // 25MB
-
-        if (file.size > maxSize) {
-          const uploadInstructions = document.querySelector(
-            ".upload-instructions"
-          );
-          uploadInstructions.textContent =
-            "File size too large. Please upload a file smaller than 25MB.";
-          uploadInstructions.style.color = "var(--error-color)";
-          return;
-        }
-
-        const allowedTypes = [
-          "video/mp4",
-          "video/avi",
-          "video/mkv",
-          "video/mov",
-          "video/wmv",
-          "video/flv",
-          "video/webm",
-          "video/quicktime",
-          "video/x-msvideo",
-          "video/x-matroska",
-          "video/x-ms-wmv",
-          "video/x-flv",
-          "application/octet-stream",
-        ];
-
-        const fileExtension = "." + file.name.split(".").pop().toLowerCase();
         const allowedExtensions = [
+          ".mp3",
+          ".wav",
+          ".m4a",
+          ".aac",
+          ".ogg",
           ".mp4",
           ".avi",
           ".mkv",
@@ -845,26 +665,18 @@
           ".flv",
           ".webm",
         ];
-
-        const isValidType =
-          allowedTypes.includes(file.type) ||
-          allowedExtensions.includes(fileExtension);
-
-        if (!isValidType) {
-          const uploadInstructions = document.querySelector(
-            ".upload-instructions"
-          );
-          uploadInstructions.textContent =
-            "Unsupported format. Please select a video file.";
-          uploadInstructions.style.color = "var(--error-color)";
+        const fileExtension = "." + file.name.split(".").pop().toLowerCase();
+        if (file.size > maxSize || !allowedExtensions.includes(fileExtension)) {
+          fileName.textContent = "Invalid file.";
+          fileName.style.color = "var(--error-color)";
+          submitBtn.disabled = true;
           return;
         }
-
         fileName.textContent = file.name;
         fileSize.textContent = formatFileSize(file.size);
+        fileName.style.color = "var(--success-color)";
         fileInfo.classList.add("show");
         submitBtn.disabled = false;
-
         const uploadInstructions = document.querySelector(
           ".upload-instructions"
         );
@@ -907,14 +719,14 @@
         progressContainer.classList.remove("show");
         submitBtn.disabled = false;
         submitBtn.innerHTML =
-          '<i class="fas fa-magic"></i> <span id="submitText">Clean My Video</span>';
+          '<i class="fas fa-file-pdf"></i> <span id="submitText">Get PDF Transcript</span>';
         fileInfo.classList.remove("show");
-        videoFile.value = "";
+        mediaFile.value = "";
         const uploadInstructions = document.querySelector(
           ".upload-instructions"
         );
         uploadInstructions.textContent =
-          "Drag and drop your video file here or click to browse";
+          "Drag and drop your audio or video file here or click to browse";
         uploadInstructions.style.color = "var(--text-secondary)";
       }
 
@@ -924,7 +736,7 @@
       uploadForm.addEventListener("submit", async (e) => {
         e.preventDefault();
 
-        if (!videoFile.files.length) {
+        if (!mediaFile.files.length) {
           const uploadInstructions = document.querySelector(
             ".upload-instructions"
           );
@@ -934,14 +746,7 @@
         }
 
         const formData = new FormData(uploadForm);
-        formData.append("option", "video-clean");
-
-        const selectedGender = document.querySelector(
-          'input[name="gender"]:checked'
-        );
-        if (selectedGender) {
-          formData.append("gender", selectedGender.value);
-        }
+        formData.append("option", "transcription");
 
         processing = true;
         progressContainer.classList.add("show");
@@ -969,40 +774,29 @@
           progressText.textContent = "Done!";
 
           if (response.ok) {
-            const contentType = response.headers.get("content-type");
-            if (contentType && contentType.includes("application/json")) {
-              const errorData = await response.json();
-              alert("Error: " + (errorData.error || "Processing failed"));
-            } else {
-              const blob = await response.blob();
-              const url = window.URL.createObjectURL(blob);
-              const filename =
-                "CLEAN_" + videoFile.files[0].name.replace(/\.[^/.]+$/, ".mp4");
-
-              // Show download popup instead of automatically downloading
-              downloadText.textContent = `Want to download the ${filename}?`;
-              downloadPopup.classList.add("show");
-
-              // Set up download button
-              confirmDownload.onclick = function () {
-                const a = document.createElement("a");
-                a.href = url;
-                a.download = filename;
-                document.body.appendChild(a);
-                a.click();
-                document.body.removeChild(a);
-                window.URL.revokeObjectURL(url);
-                downloadPopup.classList.remove("show");
-                resetForm();
-              };
-
-              // Set up cancel button
-              cancelDownload.onclick = function () {
-                window.URL.revokeObjectURL(url);
-                downloadPopup.classList.remove("show");
-                resetForm();
-              };
-            }
+            const blob = await response.blob();
+            const url = window.URL.createObjectURL(blob);
+            const filename =
+              "TRANSCRIPT_" +
+              mediaFile.files[0].name.replace(/\.[^/.]+$/, ".pdf");
+            downloadText.textContent = `Want to download the ${filename}?`;
+            downloadPopup.classList.add("show");
+            confirmDownload.onclick = function () {
+              const a = document.createElement("a");
+              a.href = url;
+              a.download = filename;
+              document.body.appendChild(a);
+              a.click();
+              document.body.removeChild(a);
+              window.URL.revokeObjectURL(url);
+              downloadPopup.classList.remove("show");
+              resetForm();
+            };
+            cancelDownload.onclick = function () {
+              window.URL.revokeObjectURL(url);
+              downloadPopup.classList.remove("show");
+              resetForm();
+            };
           } else {
             const contentType = response.headers.get("content-type");
             if (contentType && contentType.includes("application/json")) {

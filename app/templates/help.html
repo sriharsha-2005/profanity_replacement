@@ -3,26 +3,33 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Help - NoProfanity</title>
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet" />
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+    <title>Contact - NoProfanity</title>
+    <link
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"
+      rel="stylesheet"
+    />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
     <style>
       :root {
+        /* Changed colors as specified */
         --bg-primary: #000000;
-        --bg-secondary: #0a0a0a;
-        --bg-accent: #1a1a1a;
+        --bg-secondary: #000000;
+        --bg-accent: #000000;
         --text-primary: #ffffff;
-        --text-secondary: #cccccc;
-        --text-accent: #ffd700;
-        --border-color: #000080;
-        --shadow: 0 4px 20px rgba(0, 128, 0, 0.3);
-        --primary-color: #ffd700;
-        --secondary-color: #000080;
-        --accent-color: #00ff00;
-        --highlight-gold: #ffd700;
-        --highlight-navy: #000080;
-        --highlight-green: #00ff00;
-        --navy-blue: #000080;
+        --text-secondary: #ffffff;
+        --text-accent: #d4af37;
+        --border-color: #000000; /* Removed nav border line */
+        --shadow: 0 4px 20px rgba(212, 175, 55, 0.15); /* 50% intensity */
+        --primary-color: #d4af37;
+        --secondary-color: #000000;
+        --accent-color: #d4af37;
+        --highlight-gold: #d4af37;
+        --highlight-navy: #000000;
+        --highlight-green: #d4af37;
+        --navy-blue: #000000;
       }
 
       * {
@@ -39,6 +46,7 @@
         line-height: 1.6;
       }
 
+      /* Increased nav bar height by 50% */
       .header {
         position: fixed;
         top: 0;
@@ -48,16 +56,18 @@
         backdrop-filter: blur(20px);
         border-bottom: 2px solid var(--border-color);
         z-index: 1000;
-        box-shadow: 0 2px 20px rgba(0, 128, 0, 0.3);
+        box-shadow: 0 2px 20px rgba(212, 175, 55, 0.15);
+        height: 90px; /* Increased height */
       }
 
       .header-content {
         max-width: 1200px;
         margin: 0 auto;
-        padding: 0.75rem 1rem;
+        padding: 1.5rem 1rem; /* Increased padding */
         display: flex;
         justify-content: space-between;
         align-items: center;
+        height: 100%;
       }
 
       .logo {
@@ -68,7 +78,7 @@
         font-weight: 700;
         color: var(--highlight-gold);
         text-decoration: none;
-        text-shadow: 0 0 10px rgba(255, 215, 0, 0.5);
+        text-shadow: 0 0 10px rgba(212, 175, 55, 0.25); /* 50% intensity */
       }
 
       .logo-icon {
@@ -79,18 +89,22 @@
         display: flex;
         align-items: center;
         justify-content: center;
-        box-shadow: 0 0 20px rgba(255, 215, 0, 0.6);
+        box-shadow: 0 0 20px rgba(212, 175, 55, 0.3); /* 50% intensity */
         border: 2px solid var(--highlight-gold);
         animation: glow 2s ease-in-out infinite alternate;
       }
 
       @keyframes glow {
-        from { box-shadow: 0 0 20px rgba(255, 215, 0, 0.6); }
-        to { box-shadow: 0 0 30px rgba(255, 215, 0, 0.8); }
+        from {
+          box-shadow: 0 0 20px rgba(212, 175, 55, 0.3);
+        }
+        to {
+          box-shadow: 0 0 30px rgba(212, 175, 55, 0.4);
+        }
       }
 
       .logo-icon::before {
-        content: "NP";
+        content: "S"; /* Changed from NP to S */
         font-size: 1rem;
         font-weight: 700;
         color: #000000;
@@ -118,20 +132,21 @@
         border-radius: 8px;
       }
 
+      /* Changed hover effect - removed box, kept line and text */
       .nav-link:hover {
-        color: var(--highlight-gold);
-        background: rgba(255, 215, 0, 0.1);
+        color: #e6c04a; /* Brightened gold */
+        background: transparent; /* Changed from rgba(255, 215, 0, 0.1) */
         transform: translateY(-2px);
       }
 
       .nav-link::after {
-        content: '';
+        content: "";
         position: absolute;
         bottom: 0;
         left: 50%;
         width: 0;
         height: 2px;
-        background: var(--highlight-gold);
+        background: #e6c04a; /* Brightened gold */
         transition: all 0.3s ease;
         transform: translateX(-50%);
       }
@@ -145,23 +160,29 @@
       }
 
       @keyframes blink {
-        0% { opacity: 1; }
-        50% { opacity: 0.5; }
-        100% { opacity: 1; }
+        0% {
+          opacity: 1;
+        }
+        50% {
+          opacity: 0.5;
+        }
+        100% {
+          opacity: 1;
+        }
       }
 
       .main-content {
-        padding-top: 100px;
+        padding-top: 90px; /* Adjusted for taller nav */
         min-height: 100vh;
         display: flex;
         align-items: center;
         justify-content: center;
       }
 
-      .help-container {
+      .contact-container {
         text-align: center;
         background: var(--bg-accent);
-        border: 2px solid var(--border-color);
+        border: 2px solid #000000; /* Removed border */
         border-radius: 16px;
         padding: 4rem 2rem;
         box-shadow: var(--shadow);
@@ -169,29 +190,33 @@
         width: 90%;
       }
 
-      .help-icon {
+      .contact-icon {
         font-size: 4rem;
-        color: var(--highlight-navy);
+        color: var(--highlight-gold); /* Changed from navy to gold */
         margin-bottom: 2rem;
-        text-shadow: 0 0 20px rgba(0, 128, 0, 0.5);
+        text-shadow: 0 0 20px rgba(212, 175, 55, 0.25); /* 50% intensity */
       }
 
-      .help-title {
+      .contact-title {
         font-size: 2.5rem;
         font-weight: 700;
         color: var(--highlight-gold);
         margin-bottom: 1rem;
-        text-shadow: 0 0 30px rgba(255, 215, 0, 0.5);
+        text-shadow: 0 0 30px rgba(212, 175, 55, 0.25); /* 50% intensity */
       }
 
-      .help-message {
+      .contact-message {
         font-size: 1.5rem;
         color: var(--text-secondary);
         margin-bottom: 2rem;
       }
 
       .back-btn {
-        background: linear-gradient(135deg, var(--highlight-gold), #ffed4e);
+        background: linear-gradient(
+          135deg,
+          #d4af37,
+          #e6c04a
+        ); /* Brightened gold */
         color: #000000;
         padding: 1rem 2rem;
         border-radius: 25px;
@@ -201,21 +226,25 @@
         border: none;
         cursor: pointer;
         font-size: 1rem;
-        box-shadow: 0 4px 15px rgba(255, 215, 0, 0.3);
+        box-shadow: 0 4px 15px rgba(212, 175, 55, 0.15); /* 50% intensity */
         display: inline-block;
       }
 
       .back-btn:hover {
         transform: translateY(-3px);
-        box-shadow: 0 6px 20px rgba(255, 215, 0, 0.5);
-        background: linear-gradient(135deg, #ffed4e, var(--highlight-gold));
+        box-shadow: 0 6px 20px rgba(212, 175, 55, 0.25); /* 50% intensity */
+        background: linear-gradient(
+          135deg,
+          #e6c04a,
+          #d4af37
+        ); /* Brightened gold */
       }
 
       .footer {
         background: var(--bg-primary);
         padding: 2rem 1rem;
         text-align: center;
-        border-top: 2px solid var(--border-color);
+        border-top: 2px solid #000000; /* Removed border */
         margin-top: 2rem;
       }
 
@@ -225,15 +254,15 @@
       }
 
       @media (max-width: 768px) {
-        .help-title {
+        .contact-title {
           font-size: 2rem;
         }
 
-        .help-message {
+        .contact-message {
           font-size: 1.25rem;
         }
 
-        .help-container {
+        .contact-container {
           padding: 3rem 1.5rem;
         }
       }
@@ -256,13 +285,26 @@
     </header>
 
     <main class="main-content">
-      <div class="help-container">
-        <div class="help-icon">
+      <div class="contact-container">
+        <div class="contact-icon">
           <i class="fas fa-question-circle"></i>
         </div>
-        <h1 class="help-title">I Can't Help You!</h1>
-        <p class="help-message">
-          Figure it out yourself!
+        <h1 class="contact-title">Need Help?</h1>
+        <p class="contact-message">
+          Welcome to the NoProfanity Help Desk!<br />
+          Our support team is currently busy binge-watching cat videos and
+          perfecting their karaoke skills.<br />
+          <br />
+          If you have a question, try yelling at your screen. If your computer
+          responds, please let us know—because that's impressive.<br />
+          <br />
+          For technical issues, we recommend the ancient ritual of "turning it
+          off and on again."<br />
+          <br />
+          If all else fails, make yourself a cup of coffee and pretend
+          everything is working perfectly.<br />
+          <br />
+          Remember: The real profanity is inside all of us. Stay gold!
         </p>
         <a href="/" class="back-btn">
           <i class="fas fa-home"></i>
@@ -281,14 +323,14 @@
 
     <script>
       // Add blink effect to navigation links
-      document.querySelectorAll('.nav-link').forEach(link => {
-        link.addEventListener('click', function() {
-          this.classList.add('blink');
+      document.querySelectorAll(".nav-link").forEach((link) => {
+        link.addEventListener("click", function () {
+          this.classList.add("blink");
           setTimeout(() => {
-            this.classList.remove('blink');
+            this.classList.remove("blink");
           }, 300);
         });
       });
     </script>
   </body>
-</html> 
+</html>

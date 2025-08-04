@@ -4,8 +4,14 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Login - NoProfanity</title>
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet" />
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+    <link
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"
+      rel="stylesheet"
+    />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
     <style>
       :root {
         --bg-primary: #000000;
@@ -13,16 +19,16 @@
         --bg-accent: #1a1a1a;
         --text-primary: #ffffff;
         --text-secondary: #cccccc;
-        --text-accent: #ffd700;
-        --border-color: #000080;
-        --shadow: 0 4px 20px rgba(0, 128, 0, 0.3);
-        --primary-color: #ffd700;
-        --secondary-color: #000080;
-        --accent-color: #00ff00;
-        --highlight-gold: #ffd700;
-        --highlight-navy: #000080;
-        --highlight-green: #00ff00;
-        --navy-blue: #000080;
+        --text-accent: #d4af37;
+        --border-color: #000000;
+        --shadow: 0 4px 20px rgba(212, 175, 55, 0.2);
+        --primary-color: #d4af37;
+        --secondary-color: #000000;
+        --accent-color: #ffffff;
+        --highlight-gold: #d4af37;
+        --highlight-navy: #000000;
+        --highlight-green: #ffffff;
+        --navy-blue: #000000;
         --error-color: #ff4444;
         --success-color: #00ff88;
       }
@@ -50,13 +56,13 @@
         backdrop-filter: blur(20px);
         border-bottom: 2px solid var(--border-color);
         z-index: 1000;
-        box-shadow: 0 2px 20px rgba(0, 128, 0, 0.3);
+        box-shadow: 0 2px 20px rgba(212, 175, 55, 0.2);
       }
 
       .header-content {
         max-width: 1200px;
         margin: 0 auto;
-        padding: 0.75rem 1rem;
+        padding: 1.125rem 1rem;
         display: flex;
         justify-content: space-between;
         align-items: center;
@@ -70,29 +76,33 @@
         font-weight: 700;
         color: var(--highlight-gold);
         text-decoration: none;
-        text-shadow: 0 0 10px rgba(255, 215, 0, 0.5);
+        text-shadow: 0 0 5px rgba(212, 175, 55, 0.3);
       }
 
       .logo-icon {
-        width: 40px;
-        height: 40px;
+        width: 32px;
+        height: 32px;
         background: var(--highlight-gold);
         border-radius: 50%;
         display: flex;
         align-items: center;
         justify-content: center;
-        box-shadow: 0 0 20px rgba(255, 215, 0, 0.6);
+        box-shadow: 0 0 10px rgba(212, 175, 55, 0.4);
         border: 2px solid var(--highlight-gold);
         animation: glow 2s ease-in-out infinite alternate;
       }
 
       @keyframes glow {
-        from { box-shadow: 0 0 20px rgba(255, 215, 0, 0.6); }
-        to { box-shadow: 0 0 30px rgba(255, 215, 0, 0.8); }
+        from {
+          box-shadow: 0 0 10px rgba(212, 175, 55, 0.4);
+        }
+        to {
+          box-shadow: 0 0 15px rgba(212, 175, 55, 0.5);
+        }
       }
 
       .logo-icon::before {
-        content: "NP";
+        content: "S";
         font-size: 1rem;
         font-weight: 700;
         color: #000000;
@@ -122,12 +132,11 @@
 
       .nav-link:hover {
         color: var(--highlight-gold);
-        background: rgba(255, 215, 0, 0.1);
         transform: translateY(-2px);
       }
 
       .nav-link::after {
-        content: '';
+        content: "";
         position: absolute;
         bottom: 0;
         left: 50%;
@@ -147,9 +156,15 @@
       }
 
       @keyframes blink {
-        0% { opacity: 1; }
-        50% { opacity: 0.5; }
-        100% { opacity: 1; }
+        0% {
+          opacity: 1;
+        }
+        50% {
+          opacity: 0.5;
+        }
+        100% {
+          opacity: 1;
+        }
       }
 
       .main-content {
@@ -176,7 +191,7 @@
         color: var(--highlight-gold);
         text-align: center;
         margin-bottom: 2rem;
-        text-shadow: 0 0 30px rgba(255, 215, 0, 0.5);
+        text-shadow: 0 0 15px rgba(212, 175, 55, 0.3);
       }
 
       .form-group {
@@ -206,7 +221,7 @@
       .form-input:focus {
         outline: none;
         border-color: var(--highlight-gold);
-        box-shadow: 0 0 10px rgba(255, 215, 0, 0.3);
+        box-shadow: 0 0 10px rgba(212, 175, 55, 0.3);
       }
 
       .form-input.error {
@@ -226,7 +241,7 @@
 
       .login-btn {
         width: 100%;
-        background: linear-gradient(135deg, var(--highlight-gold), #ffed4e);
+        background: linear-gradient(135deg, var(--highlight-gold), #e6c84e);
         color: #000000;
         padding: 1rem 2rem;
         border-radius: 25px;
@@ -236,15 +251,15 @@
         border: none;
         cursor: pointer;
         font-size: 1rem;
-        box-shadow: 0 4px 15px rgba(255, 215, 0, 0.3);
+        box-shadow: 0 4px 15px rgba(212, 175, 55, 0.18);
         font-family: "Inter", sans-serif;
         margin-top: 1rem;
       }
 
       .login-btn:hover {
         transform: translateY(-3px);
-        box-shadow: 0 6px 20px rgba(255, 215, 0, 0.5);
-        background: linear-gradient(135deg, #ffed4e, var(--highlight-gold));
+        box-shadow: 0 6px 15px rgba(212, 175, 55, 0.3);
+        background: linear-gradient(135deg, #e6c84e, var(--highlight-gold));
       }
 
       .login-btn:disabled {
@@ -288,7 +303,7 @@
       }
 
       .message.info {
-        background: rgba(255, 215, 0, 0.1);
+        background: rgba(212, 175, 55, 0.1);
         border: 1px solid var(--highlight-gold);
         color: var(--highlight-gold);
       }
@@ -336,36 +351,46 @@
     <main class="main-content">
       <div class="login-container">
         <h1 class="login-title">Login</h1>
-        
         <form id="loginForm">
           <div class="form-group">
             <label for="email" class="form-label">Email Address</label>
-            <input type="email" id="email" name="email" class="form-input" required>
-            <div class="error-message" id="emailError">Please enter a valid email address</div>
+            <input
+              type="email"
+              id="email"
+              name="email"
+              class="form-input"
+              required
+            />
+            <div class="error-message" id="emailError">
+              Please enter a valid email address
+            </div>
           </div>
-
           <div class="form-group">
             <label for="password" class="form-label">Password</label>
-            <input type="password" id="password" name="password" class="form-input" required>
-            <div class="error-message" id="passwordError">Password is required</div>
+            <input
+              type="password"
+              id="password"
+              name="password"
+              class="form-input"
+              required
+            />
+            <div class="error-message" id="passwordError">
+              Password is required
+            </div>
           </div>
-
           <button type="submit" class="login-btn" id="loginBtn">
             <i class="fas fa-sign-in-alt"></i>
             Login
           </button>
         </form>
-
         <div class="message info" id="loginMessage">
           We are currently not taking any logins or signups.
         </div>
-
         <div class="signup-link">
           Don't have an account? <a href="/signup">Sign up</a>
         </div>
       </div>
     </main>
-
     <footer class="footer">
       <div class="footer-content">
         <p>
@@ -373,15 +398,14 @@
         </p>
       </div>
     </footer>
-
     <script>
-      const loginForm = document.getElementById('loginForm');
-      const emailInput = document.getElementById('email');
-      const passwordInput = document.getElementById('password');
-      const emailError = document.getElementById('emailError');
-      const passwordError = document.getElementById('passwordError');
-      const loginMessage = document.getElementById('loginMessage');
-      const loginBtn = document.getElementById('loginBtn');
+      const loginForm = document.getElementById("loginForm");
+      const emailInput = document.getElementById("email");
+      const passwordInput = document.getElementById("password");
+      const emailError = document.getElementById("emailError");
+      const passwordError = document.getElementById("passwordError");
+      const loginMessage = document.getElementById("loginMessage");
+      const loginBtn = document.getElementById("loginBtn");
 
       // Email validation
       function validateEmail(email) {
@@ -391,57 +415,60 @@
 
       // Show error message
       function showError(input, errorElement, message) {
-        input.classList.add('error');
+        input.classList.add("error");
         errorElement.textContent = message;
-        errorElement.classList.add('show');
+        errorElement.classList.add("show");
       }
 
       // Hide error message
       function hideError(input, errorElement) {
-        input.classList.remove('error');
-        errorElement.classList.remove('show');
+        input.classList.remove("error");
+        errorElement.classList.remove("show");
       }
 
       // Validate form
       function validateForm() {
         let isValid = true;
-        
         // Validate email
         if (!emailInput.value.trim()) {
-          showError(emailInput, emailError, 'Email is required');
+          showError(emailInput, emailError, "Email is required");
           isValid = false;
         } else if (!validateEmail(emailInput.value.trim())) {
-          showError(emailInput, emailError, 'Please enter a valid email address');
+          showError(
+            emailInput,
+            emailError,
+            "Please enter a valid email address"
+          );
           isValid = false;
         } else {
           hideError(emailInput, emailError);
         }
-
         // Validate password
         if (!passwordInput.value.trim()) {
-          showError(passwordInput, passwordError, 'Password is required');
+          showError(passwordInput, passwordError, "Password is required");
           isValid = false;
         } else if (passwordInput.value.length < 6) {
-          showError(passwordInput, passwordError, 'Password must be at least 6 characters');
+          showError(
+            passwordInput,
+            passwordError,
+            "Password must be at least 6 characters"
+          );
           isValid = false;
         } else {
           hideError(passwordInput, passwordError);
         }
-
         return isValid;
       }
 
       // Form submission
-      loginForm.addEventListener('submit', function(e) {
+      loginForm.addEventListener("submit", function (e) {
         e.preventDefault();
-        
         if (validateForm()) {
           loginBtn.disabled = true;
-          loginBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Logging in...';
-          
-          // Show message after a short delay
+          loginBtn.innerHTML =
+            '<i class="fas fa-spinner fa-spin"></i> Logging in...';
           setTimeout(() => {
-            loginMessage.classList.add('show');
+            loginMessage.classList.add("show");
             loginBtn.disabled = false;
             loginBtn.innerHTML = '<i class="fas fa-sign-in-alt"></i> Login';
           }, 1000);
@@ -449,31 +476,35 @@
       });
 
       // Real-time validation
-      emailInput.addEventListener('blur', function() {
+      emailInput.addEventListener("blur", function () {
         if (this.value.trim() && !validateEmail(this.value.trim())) {
-          showError(this, emailError, 'Please enter a valid email address');
+          showError(this, emailError, "Please enter a valid email address");
         } else if (this.value.trim()) {
           hideError(this, emailError);
         }
       });
 
-      passwordInput.addEventListener('blur', function() {
+      passwordInput.addEventListener("blur", function () {
         if (this.value.trim() && this.value.length < 6) {
-          showError(this, passwordError, 'Password must be at least 6 characters');
+          showError(
+            this,
+            passwordError,
+            "Password must be at least 6 characters"
+          );
         } else if (this.value.trim()) {
           hideError(this, passwordError);
         }
       });
 
       // Add blink effect to navigation links
-      document.querySelectorAll('.nav-link').forEach(link => {
-        link.addEventListener('click', function() {
-          this.classList.add('blink');
+      document.querySelectorAll(".nav-link").forEach((link) => {
+        link.addEventListener("click", function () {
+          this.classList.add("blink");
           setTimeout(() => {
-            this.classList.remove('blink');
+            this.classList.remove("blink");
           }, 300);
         });
       });
     </script>
   </body>
-</html> 
+</html>

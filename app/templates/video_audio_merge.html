@@ -639,18 +639,18 @@
 
     <main class="main-content">
       <section class="tool-header">
-        <h1 class="tool-title">Video Audio Cleaning</h1>
+        <h1 class="tool-title">Merge Audio with Video</h1>
         <p class="tool-subtitle">
-          Automatically detect and replace profanity in videos with
-          natural-sounding alternatives
+          Upload a video and a new audio file. The tool will remove the original
+          audio from your video and merge it with the provided audio.
         </p>
       </section>
 
       <div class="upload-container">
-        <h2 class="upload-title">Clean Your Video Audio</h2>
+        <h2 class="upload-title">Replace Video Audio</h2>
         <p class="upload-subtitle">
-          Upload your video file and we'll detect and replace profanities with
-          seamless natural voice.
+          Upload your video and audio files. The video will be merged with your
+          audio and ready for download.
         </p>
 
         <form id="uploadForm" enctype="multipart/form-data">
@@ -659,7 +659,7 @@
               <i class="fas fa-cloud-upload-alt"></i>
             </div>
             <p class="upload-instructions">
-              Drag and drop your video file here or click to browse
+              Drag and drop your video and audio files here or click to browse
             </p>
             <p
               style="
@@ -668,8 +668,8 @@
                 margin-top: 1rem;
               "
             >
-              Supports MP4, AVI, MKV, MOV, WMV, FLV, and WebM formats (Max:
-              25MB)
+              Video: MP4, AVI, MKV, MOV, WMV, FLV, WebM | Audio: MP3, WAV, M4A,
+              AAC, OGG (Max: 25MB each)
             </p>
             <input
               type="file"
@@ -678,39 +678,20 @@
               accept="video/*"
               style="display: none"
             />
-          </div>
-
-          <div class="file-info" id="fileInfo">
-            <div class="file-name" id="fileName"></div>
-            <div class="file-size" id="fileSize"></div>
-          </div>
-
-          <div class="voice-section">
-            <label class="voice-label">Choose Replacement Voice Style</label>
-            <div class="voice-options">
-              <div class="voice-option">
-                <input
-                  type="radio"
-                  id="female"
-                  name="gender"
-                  value="female"
-                  checked
-                />
-                <label for="female">
-                  <i class="fas fa-venus"></i>
-                  Female Voice
-                </label>
-              </div>
-              <div class="voice-option">
-                <input type="radio" id="male" name="gender" value="male" />
-                <label for="male">
-                  <i class="fas fa-mars"></i>
-                  Male Voice
-                </label>
-              </div>
+            <input
+              type="file"
+              id="audioFile"
+              name="audio"
+              accept="audio/*"
+              style="display: none"
+            />
+            <div class="file-info" id="fileInfo">
+              <div class="file-name" id="fileName"></div>
+              <div class="file-size" id="fileSize"></div>
+              <div class="audio-file-name" id="audioFileName"></div>
+              <div class="audio-file-size" id="audioFileSize"></div>
             </div>
           </div>
-
           <div class="progress-container" id="progressContainer">
             <div class="clock-container">
               <div class="clock-face">
@@ -726,10 +707,9 @@
               Cancel Process
             </button>
           </div>
-
           <button type="submit" class="submit-btn" id="submitBtn" disabled>
             <i class="fas fa-magic"></i>
-            <span id="submitText">Clean My Video</span>
+            <span id="submitText">Merge Audio & Download</span>
           </button>
         </form>
       </div>
@@ -759,14 +739,16 @@
       // File Upload
       const uploadArea = document.getElementById("uploadArea");
       const videoFile = document.getElementById("videoFile");
+      const audioFile = document.getElementById("audioFile");
       const fileInfo = document.getElementById("fileInfo");
       const fileName = document.getElementById("fileName");
       const fileSize = document.getElementById("fileSize");
+      const audioFileName = document.getElementById("audioFileName");
+      const audioFileSize = document.getElementById("audioFileSize");
       const submitBtn = document.getElementById("submitBtn");
       const progressContainer = document.getElementById("progressContainer");
       const progressText = document.getElementById("progressText");
       const progressPercentage = document.getElementById("progressPercentage");
-      const progressAnimation = document.getElementById("progressAnimation");
       const cancelBtn = document.getElementById("cancelBtn");
       const downloadPopup = document.getElementById("downloadPopup");
       const downloadText = document.getElementById("downloadText");
@@ -774,7 +756,6 @@
       const cancelDownload = document.getElementById("cancelDownload");
 
       let processing = false;
-      let animationInterval;
       let progressInterval;
       let currentProgress = 0;
 
@@ -795,47 +776,30 @@
         e.preventDefault();
         uploadArea.classList.remove("dragover");
         const files = e.dataTransfer.files;
-        if (files.length > 0) {
-          handleFile(files[0]);
+        let video = null,
+          audio = null;
+        for (let i = 0; i < files.length; i++) {
+          if (files[i].type.startsWith("video/")) video = files[i];
+          if (files[i].type.startsWith("audio/")) audio = files[i];
         }
+        if (video) handleVideoFile(video);
+        if (audio) handleAudioFile(audio);
       });
 
       videoFile.addEventListener("change", (e) => {
         if (e.target.files.length > 0) {
-          handleFile(e.target.files[0]);
+          handleVideoFile(e.target.files[0]);
         }
       });
 
-      function handleFile(file) {
-        const maxSize = 25 * 1024 * 1024; // 25MB
-
-        if (file.size > maxSize) {
-          const uploadInstructions = document.querySelector(
-            ".upload-instructions"
-          );
-          uploadInstructions.textContent =
-            "File size too large. Please upload a file smaller than 25MB.";
-          uploadInstructions.style.color = "var(--error-color)";
-          return;
+      audioFile.addEventListener("change", (e) => {
+        if (e.target.files.length > 0) {
+          handleAudioFile(e.target.files[0]);
         }
+      });
 
-        const allowedTypes = [
-          "video/mp4",
-          "video/avi",
-          "video/mkv",
-          "video/mov",
-          "video/wmv",
-          "video/flv",
-          "video/webm",
-          "video/quicktime",
-          "video/x-msvideo",
-          "video/x-matroska",
-          "video/x-ms-wmv",
-          "video/x-flv",
-          "application/octet-stream",
-        ];
-
-        const fileExtension = "." + file.name.split(".").pop().toLowerCase();
+      function handleVideoFile(file) {
+        const maxSize = 25 * 1024 * 1024; // 25MB
         const allowedExtensions = [
           ".mp4",
           ".avi",
@@ -845,31 +809,45 @@
           ".flv",
           ".webm",
         ];
+        const fileExtension = "." + file.name.split(".").pop().toLowerCase();
+        if (file.size > maxSize || !allowedExtensions.includes(fileExtension)) {
+          fileName.textContent = "Invalid video file.";
+          fileName.style.color = "var(--error-color)";
+          submitBtn.disabled = true;
+          return;
+        }
+        fileName.textContent = "Video: " + file.name;
+        fileSize.textContent = "Size: " + formatFileSize(file.size);
+        fileName.style.color = "var(--success-color)";
+        checkBothFiles();
+      }
 
-        const isValidType =
-          allowedTypes.includes(file.type) ||
-          allowedExtensions.includes(fileExtension);
+      function handleAudioFile(file) {
+        const maxSize = 25 * 1024 * 1024; // 25MB
+        const allowedExtensions = [".mp3", ".wav", ".m4a", ".aac", ".ogg"];
+        const fileExtension = "." + file.name.split(".").pop().toLowerCase();
+        if (file.size > maxSize || !allowedExtensions.includes(fileExtension)) {
+          audioFileName.textContent = "Invalid audio file.";
+          audioFileName.style.color = "var(--error-color)";
+          submitBtn.disabled = true;
+          return;
+        }
+        audioFileName.textContent = "Audio: " + file.name;
+        audioFileSize.textContent = "Size: " + formatFileSize(file.size);
+        audioFileName.style.color = "var(--success-color)";
+        checkBothFiles();
+      }
 
-        if (!isValidType) {
+      function checkBothFiles() {
+        if (videoFile.files.length > 0 && audioFile.files.length > 0) {
+          fileInfo.classList.add("show");
+          submitBtn.disabled = false;
           const uploadInstructions = document.querySelector(
             ".upload-instructions"
           );
-          uploadInstructions.textContent =
-            "Unsupported format. Please select a video file.";
-          uploadInstructions.style.color = "var(--error-color)";
-          return;
+          uploadInstructions.textContent = "Both files selected successfully!";
+          uploadInstructions.style.color = "var(--success-color)";
         }
-
-        fileName.textContent = file.name;
-        fileSize.textContent = formatFileSize(file.size);
-        fileInfo.classList.add("show");
-        submitBtn.disabled = false;
-
-        const uploadInstructions = document.querySelector(
-          ".upload-instructions"
-        );
-        uploadInstructions.textContent = "File selected successfully!";
-        uploadInstructions.style.color = "var(--success-color)";
       }
 
       function formatFileSize(bytes) {
@@ -880,16 +858,10 @@
         return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + " " + sizes[i];
       }
 
-      function animateSandTimer() {
-        // Animation is handled by CSS
-      }
-
       function updateProgress() {
         currentProgress += Math.random() * 15;
         if (currentProgress > 90) currentProgress = 90;
-
         progressPercentage.textContent = `${Math.round(currentProgress)}%`;
-
         if (currentProgress < 30) {
           progressText.textContent = "Uploading...";
         } else if (currentProgress < 60) {
@@ -902,19 +874,23 @@
       function resetForm() {
         processing = false;
         currentProgress = 0;
-        clearInterval(animationInterval);
         clearInterval(progressInterval);
         progressContainer.classList.remove("show");
         submitBtn.disabled = false;
         submitBtn.innerHTML =
-          '<i class="fas fa-magic"></i> <span id="submitText">Clean My Video</span>';
+          '<i class="fas fa-magic"></i> <span id="submitText">Merge Audio & Download</span>';
         fileInfo.classList.remove("show");
         videoFile.value = "";
+        audioFile.value = "";
+        fileName.textContent = "";
+        fileSize.textContent = "";
+        audioFileName.textContent = "";
+        audioFileSize.textContent = "";
         const uploadInstructions = document.querySelector(
           ".upload-instructions"
         );
         uploadInstructions.textContent =
-          "Drag and drop your video file here or click to browse";
+          "Drag and drop your video and audio files here or click to browse";
         uploadInstructions.style.color = "var(--text-secondary)";
       }
 
@@ -924,38 +900,31 @@
       uploadForm.addEventListener("submit", async (e) => {
         e.preventDefault();
 
-        if (!videoFile.files.length) {
+        if (!videoFile.files.length || !audioFile.files.length) {
           const uploadInstructions = document.querySelector(
             ".upload-instructions"
           );
-          uploadInstructions.textContent = "Please upload a file";
+          uploadInstructions.textContent =
+            "Please upload both video and audio files";
           uploadInstructions.style.color = "var(--error-color)";
           return;
         }
 
         const formData = new FormData(uploadForm);
-        formData.append("option", "video-clean");
-
-        const selectedGender = document.querySelector(
-          'input[name="gender"]:checked'
-        );
-        if (selectedGender) {
-          formData.append("gender", selectedGender.value);
-        }
+        formData.append("option", "video-audio-merge");
 
         processing = true;
         progressContainer.classList.add("show");
         submitBtn.disabled = true;
         submitBtn.innerHTML =
-          '<i class="fas fa-spinner fa-spin"></i> Processing...';
+          '<i class="fas fa-spinner fa-spin"></i> Merging...';
 
         const uploadInstructions = document.querySelector(
           ".upload-instructions"
         );
-        uploadInstructions.textContent = "Processing your file...";
+        uploadInstructions.textContent = "Merging audio with your video...";
         uploadInstructions.style.color = "var(--primary-color)";
 
-        animateSandTimer();
         progressInterval = setInterval(updateProgress, 500);
 
         try {
@@ -977,7 +946,8 @@
               const blob = await response.blob();
               const url = window.URL.createObjectURL(blob);
               const filename =
-                "CLEAN_" + videoFile.files[0].name.replace(/\.[^/.]+$/, ".mp4");
+                "MERGED_" +
+                videoFile.files[0].name.replace(/\.[^/.]+$/, ".mp4");
 
               // Show download popup instead of automatically downloading
               downloadText.textContent = `Want to download the ${filename}?`;

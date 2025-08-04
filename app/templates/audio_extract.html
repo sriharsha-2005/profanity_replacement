@@ -399,24 +399,66 @@
 
       /* Clock Animation Styles */
       .clock-container {
-        width: 100px;
-        height: 100px;
-        margin: 0 auto 1rem;
+        width: 45px;
+        height: 45px;
+        margin: 0 auto 0.5rem;
         position: relative;
       }
 
       .clock-face {
         width: 100%;
         height: 100%;
-        border: 4px solid var(--highlight-gold);
+        border: 2px solid var(--highlight-gold);
         border-radius: 50%;
         position: relative;
-        box-shadow: 0 0 15px rgba(212, 175, 55, 0.3);
+        box-shadow: 0 0 6px rgba(212, 175, 55, 0.15);
+      }
+
+      .clock-hour {
+        width: 2px;
+        height: 11px;
+        top: 11px;
+        left: 50%;
+        background: var(--highlight-gold);
+        position: absolute;
+        transform-origin: bottom center;
+        transform: translateX(-50%) rotate(0deg);
+        z-index: 3;
+        border-radius: 2px;
+        animation: hourRotate 24s linear infinite;
+      }
+
+      .clock-minute {
+        width: 1.5px;
+        height: 16px;
+        top: 6px;
+        left: 50%;
+        background: var(--highlight-gold);
+        position: absolute;
+        transform-origin: bottom center;
+        transform: translateX(-50%) rotate(0deg);
+        z-index: 2;
+        border-radius: 2px;
+        animation: minuteRotate 6s linear infinite;
+      }
+
+      .clock-second {
+        width: 1px;
+        height: 21px;
+        top: 1px;
+        left: 50%;
+        background: var(--highlight-gold);
+        position: absolute;
+        transform-origin: bottom center;
+        transform: translateX(-50%) rotate(0deg);
+        z-index: 1;
+        border-radius: 1.5px;
+        animation: secondRotate 1s linear infinite;
       }
 
       .clock-center {
-        width: 10px;
-        height: 10px;
+        width: 5px;
+        height: 5px;
         background: var(--highlight-gold);
         border-radius: 50%;
         position: absolute;
@@ -424,48 +466,6 @@
         left: 50%;
         transform: translate(-50%, -50%);
         z-index: 4;
-      }
-
-      .clock-hour {
-        width: 4px;
-        height: 25px;
-        background: var(--highlight-gold);
-        position: absolute;
-        top: 25px;
-        left: 50%;
-        transform-origin: bottom center;
-        transform: translateX(-50%) rotate(0deg);
-        z-index: 3;
-        border-radius: 4px;
-        animation: hourRotate 24s linear infinite;
-      }
-
-      .clock-minute {
-        width: 3px;
-        height: 35px;
-        background: var(--highlight-gold);
-        position: absolute;
-        top: 15px;
-        left: 50%;
-        transform-origin: bottom center;
-        transform: translateX(-50%) rotate(0deg);
-        z-index: 2;
-        border-radius: 4px;
-        animation: minuteRotate 6s linear infinite;
-      }
-
-      .clock-second {
-        width: 2px;
-        height: 45px;
-        background: var(--highlight-gold);
-        position: absolute;
-        top: 5px;
-        left: 50%;
-        transform-origin: bottom center;
-        transform: translateX(-50%) rotate(0deg);
-        z-index: 1;
-        border-radius: 4px;
-        animation: secondRotate 1s linear infinite;
       }
 
       @keyframes hourRotate {
@@ -496,10 +496,12 @@
       }
 
       .progress-percentage {
-        font-size: 1.2rem;
-        font-weight: 600;
+        text-align: center;
         color: var(--highlight-gold);
+        font-size: 1rem;
+        font-weight: 600;
         margin-bottom: 0.5rem;
+        margin-top: -0.5rem;
       }
 
       .progress-text {
@@ -649,18 +651,18 @@
 
     <main class="main-content">
       <section class="tool-header">
-        <h1 class="tool-title">Video Audio Cleaning</h1>
+        <h1 class="tool-title">Extract Audio from Video</h1>
         <p class="tool-subtitle">
-          Automatically detect and replace profanity in videos with
-          natural-sounding alternatives
+          Upload your video file and instantly extract the audio track as an MP3
+          file.
         </p>
       </section>
 
       <div class="upload-container">
-        <h2 class="upload-title">Clean Your Video Audio</h2>
+        <h2 class="upload-title">Extract Audio</h2>
         <p class="upload-subtitle">
-          Upload your video file and we'll detect and replace profanities with
-          seamless natural voice.
+          Upload your video file and we'll extract the audio for you to
+          download.
         </p>
 
         <form id="uploadForm" enctype="multipart/form-data">
@@ -695,32 +697,6 @@
             <div class="file-size" id="fileSize"></div>
           </div>
 
-          <div class="voice-section">
-            <label class="voice-label">Choose Replacement Voice Style</label>
-            <div class="voice-options">
-              <div class="voice-option">
-                <input
-                  type="radio"
-                  id="female"
-                  name="gender"
-                  value="female"
-                  checked
-                />
-                <label for="female">
-                  <i class="fas fa-venus"></i>
-                  Female Voice
-                </label>
-              </div>
-              <div class="voice-option">
-                <input type="radio" id="male" name="gender" value="male" />
-                <label for="male">
-                  <i class="fas fa-mars"></i>
-                  Male Voice
-                </label>
-              </div>
-            </div>
-          </div>
-
           <div class="progress-container" id="progressContainer">
             <div class="clock-container">
               <div class="clock-face">
@@ -738,8 +714,8 @@
           </div>
 
           <button type="submit" class="submit-btn" id="submitBtn" disabled>
-            <i class="fas fa-magic"></i>
-            <span id="submitText">Clean My Video</span>
+            <i class="fas fa-music"></i>
+            <span id="submitText">Extract Audio</span>
           </button>
         </form>
       </div>
@@ -747,7 +723,7 @@
       <div class="download-popup" id="downloadPopup">
         <div class="download-content">
           <p class="download-text" id="downloadText">
-            Want to download the cleaned video?
+            Want to download the extracted audio?
           </p>
           <div class="download-buttons">
             <button class="download-btn" id="confirmDownload">Download</button>
@@ -892,7 +868,7 @@
         currentProgress += Math.random() * 15;
         if (currentProgress > 90) currentProgress = 90;
 
-        progressPercentage.textContent = Math.floor(currentProgress) + "%";
+        progressPercentage.textContent = `${Math.round(currentProgress)}%`;
 
         if (currentProgress < 30) {
           progressText.textContent = "Uploading...";
@@ -910,7 +886,7 @@
         progressContainer.classList.remove("show");
         submitBtn.disabled = false;
         submitBtn.innerHTML =
-          '<i class="fas fa-magic"></i> <span id="submitText">Clean My Video</span>';
+          '<i class="fas fa-music"></i> <span id="submitText">Extract Audio</span>';
         fileInfo.classList.remove("show");
         videoFile.value = "";
         const uploadInstructions = document.querySelector(
@@ -937,25 +913,18 @@
         }
 
         const formData = new FormData(uploadForm);
-        formData.append("option", "video-clean");
-
-        const selectedGender = document.querySelector(
-          'input[name="gender"]:checked'
-        );
-        if (selectedGender) {
-          formData.append("gender", selectedGender.value);
-        }
+        formData.append("option", "audio-extract"); // instead of "video-clean"
 
         processing = true;
         progressContainer.classList.add("show");
         submitBtn.disabled = true;
         submitBtn.innerHTML =
-          '<i class="fas fa-spinner fa-spin"></i> Processing...';
+          '<i class="fas fa-spinner fa-spin"></i> Extracting...';
 
         const uploadInstructions = document.querySelector(
           ".upload-instructions"
         );
-        uploadInstructions.textContent = "Processing your file...";
+        uploadInstructions.textContent = "Extracting audio from your video...";
         uploadInstructions.style.color = "var(--primary-color)";
 
         progressInterval = setInterval(updateProgress, 500);
@@ -966,6 +935,7 @@
             body: formData,
           });
 
+          // When processing is done (after fetch):
           clearInterval(progressInterval);
           progressPercentage.textContent = "100%";
           progressText.textContent = "Done!";
@@ -979,7 +949,8 @@
               const blob = await response.blob();
               const url = window.URL.createObjectURL(blob);
               const filename =
-                "CLEAN_" + videoFile.files[0].name.replace(/\.[^/.]+$/, ".mp4");
+                "EXTRACTED_" +
+                videoFile.files[0].name.replace(/\.[^/.]+$/, ".mp3");
 
               // Show download popup instead of automatically downloading
               downloadText.textContent = `Want to download the ${filename}?`;

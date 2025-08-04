@@ -169,9 +169,28 @@ def process():
         logger.error(f"Processing error: {str(e)}", exc_info=True)
         return jsonify({"error": str(e)}), 500
 
+@app.route("/tools/audio-cleaning")
+def audio_cleaning():
+    """Audio cleaning tool page."""
+    return render_template("audio_cleaning.html")
+
+@app.route("/tools/profanity-count")
+def profanity_count():
+    """Profanity count dashboard page."""
+    return render_template("profanity_count.html")
+
+@app.route("/tools/transcription")
+def transcription():
+    """Transcription tool page."""
+    return render_template("transcription.html")
+
+@app.route("/tools/video-audio-merge")
+def video_audio_merge():
+    """Video and audio merge tool page."""
+    return render_template("video_audio_merge.html")
+
 if __name__ == "__main__":
     app.run(debug=True, host="0.0.0.0", port=10000)
-
 
 
 
