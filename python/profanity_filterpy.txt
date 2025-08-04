@@ -1,0 +1,38 @@
+from typing import List, Dict, Any
+import logging
+
+logging.basicConfig(level=logging.INFO)
+logger = logging.getLogger(__name__)
+
+# Optional: Load from YAML/JSON
+PROFANITY_MAP = {
+    "damn": "darn",
+    "shit": "crap",
+    "fuck": "mess",
+    "bitch": "bully",
+    "asshole": "jerk",
+    "jeans": "hello"
+}
+
+def filter_transcript(transcript: List[Dict[str, Any]]) -> List[Dict[str, Any]]:
+    """
+    Identify profane words and suggest replacements.
+    
+    Args:
+        transcript: List of {"word": str, "start": float, "end": float}.
+    
+    Returns:
+        List of {"start", "end", "original", "replacement"}.
+    """
+    replacements = []
+    for word_obj in transcript:
+        word_clean = word_obj["word"].lower().replace(" ", "").strip(",.!?")
+        if word_clean in PROFANITY_MAP:
+            replacements.append({
+                "start": word_obj["start"],
+                "end": word_obj["end"],
+                "original": word_clean,
+                "replacement": PROFANITY_MAP[word_clean]
+            })
+    logger.info(f"Filtered {len(replacements)} profane words")
+    return replacements

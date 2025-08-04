@@ -1,0 +1,897 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Video Audio Cleaning - NoProfanity</title>
+    <link
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"
+      rel="stylesheet"
+    />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      :root {
+        --bg-primary: #000000;
+        --bg-secondary: #0a0a0a;
+        --bg-accent: #1a1a1a;
+        --text-primary: #ffffff;
+        --text-secondary: #cccccc;
+        --text-accent: #d4af37;
+        --border-color: #000000;
+        --shadow: 0 4px 20px rgba(212, 175, 55, 0.2);
+        --primary-color: #d4af37;
+        --secondary-color: #000000;
+        --accent-color: #ffffff;
+        --highlight-gold: #d4af37;
+        --highlight-navy: #000000;
+        --highlight-green: #ffffff;
+        --navy-blue: #000000;
+        --error-color: #ff4444;
+        --success-color: #00ff88;
+      }
+
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      body {
+        font-family: "Inter", sans-serif;
+        background: #000000;
+        color: var(--text-primary);
+        min-height: 100vh;
+        line-height: 1.6;
+      }
+
+      .header {
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        background: rgba(0, 0, 0, 0.95);
+        backdrop-filter: blur(20px);
+        border-bottom: 2px solid var(--border-color);
+        z-index: 1000;
+        box-shadow: 0 2px 20px rgba(212, 175, 55, 0.2);
+      }
+
+      .header-content {
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 1.125rem 1rem;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+      }
+
+      .logo {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        font-size: 1.5rem;
+        font-weight: 700;
+        color: var(--highlight-gold);
+        text-decoration: none;
+        text-shadow: 0 0 5px rgba(212, 175, 55, 0.3);
+      }
+
+      .logo-icon {
+        width: 32px;
+        height: 32px;
+        background: var(--highlight-gold);
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        box-shadow: 0 0 10px rgba(212, 175, 55, 0.4);
+        border: 2px solid var(--highlight-gold);
+        animation: glow 2s ease-in-out infinite alternate;
+      }
+
+      @keyframes glow {
+        from {
+          box-shadow: 0 0 10px rgba(212, 175, 55, 0.4);
+        }
+        to {
+          box-shadow: 0 0 15px rgba(212, 175, 55, 0.5);
+        }
+      }
+
+      .logo-icon::before {
+        content: "S";
+        font-size: 1rem;
+        font-weight: 700;
+        color: #000000;
+        z-index: 2;
+        position: relative;
+        font-family: "Inter", sans-serif;
+        letter-spacing: -0.5px;
+      }
+
+      .nav-links {
+        display: flex;
+        align-items: center;
+        gap: 2rem;
+      }
+
+      .nav-link {
+        color: var(--text-secondary);
+        text-decoration: none;
+        font-weight: 500;
+        transition: all 0.3s ease;
+        position: relative;
+        cursor: pointer;
+        font-size: 1rem;
+        padding: 0.5rem 1rem;
+        border-radius: 8px;
+      }
+
+      .nav-link:hover {
+        color: var(--highlight-gold);
+        transform: translateY(-2px);
+      }
+
+      .nav-link::after {
+        content: "";
+        position: absolute;
+        bottom: 0;
+        left: 50%;
+        width: 0;
+        height: 2px;
+        background: var(--highlight-gold);
+        transition: all 0.3s ease;
+        transform: translateX(-50%);
+      }
+
+      .nav-link:hover::after {
+        width: 80%;
+      }
+
+      .nav-link.blink {
+        animation: blink 0.3s ease-in-out;
+      }
+
+      @keyframes blink {
+        0% {
+          opacity: 1;
+        }
+        50% {
+          opacity: 0.5;
+        }
+        100% {
+          opacity: 1;
+        }
+      }
+
+      .main-content {
+        padding-top: 100px;
+        min-height: 100vh;
+      }
+
+      .tool-header {
+        text-align: center;
+        padding: 3rem 1rem;
+        background: #000000;
+      }
+
+      .tool-title {
+        font-size: 2.5rem;
+        font-weight: 700;
+        color: var(--highlight-gold);
+        margin-bottom: 1rem;
+        text-shadow: 0 0 15px rgba(212, 175, 55, 0.3);
+      }
+
+      .tool-subtitle {
+        font-size: 1.1rem;
+        color: var(--text-secondary);
+        max-width: 600px;
+        margin: 0 auto;
+      }
+
+      .upload-container {
+        max-width: 600px;
+        margin: 2rem auto;
+        background: var(--bg-accent);
+        border: 2px solid var(--border-color);
+        border-radius: 16px;
+        padding: 2rem;
+        box-shadow: var(--shadow);
+      }
+
+      .upload-title {
+        font-size: 1.5rem;
+        font-weight: 600;
+        color: var(--highlight-gold);
+        text-align: center;
+        margin-bottom: 1rem;
+      }
+
+      .upload-subtitle {
+        color: var(--text-secondary);
+        text-align: center;
+        margin-bottom: 1.5rem;
+        font-size: 0.95rem;
+      }
+
+      .upload-area {
+        border: 2px solid var(--border-color);
+        border-radius: 12px;
+        padding: 2rem 1.5rem;
+        text-align: center;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        background: var(--bg-secondary);
+        position: relative;
+        overflow: hidden;
+        min-height: 150px;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+      }
+
+      .upload-area:hover {
+        border-color: var(--highlight-gold);
+        background: rgba(212, 175, 55, 0.05);
+        transform: scale(1.02);
+      }
+
+      .upload-area.dragover {
+        border-color: var(--highlight-gold);
+        background: rgba(212, 175, 55, 0.1);
+        transform: scale(1.02);
+      }
+
+      .upload-icon {
+        font-size: 3rem;
+        color: var(--highlight-gold);
+        margin-bottom: 1rem;
+        text-shadow: 0 0 10px rgba(212, 175, 55, 0.3);
+      }
+
+      .upload-instructions {
+        color: var(--text-secondary);
+        margin-bottom: 0.5rem;
+        font-size: 1rem;
+      }
+
+      .file-info {
+        display: none;
+        margin-top: 1rem;
+        padding: 1rem;
+        background: var(--bg-secondary);
+        border-radius: 8px;
+        border: 1px solid var(--border-color);
+      }
+
+      .file-info.show {
+        display: block;
+      }
+
+      .file-name {
+        font-weight: 600;
+        color: var(--text-primary);
+        margin-bottom: 0.5rem;
+      }
+
+      .file-size {
+        color: var(--text-secondary);
+        font-size: 0.875rem;
+      }
+
+      .submit-btn {
+        background: linear-gradient(135deg, var(--highlight-gold), #e6c84e);
+        color: #000000;
+        border: none;
+        padding: 0.8rem 1.5rem;
+        border-radius: 25px;
+        font-size: 1rem;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        width: 100%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 0.75rem;
+        box-shadow: var(--shadow);
+        font-family: "Inter", sans-serif;
+        margin-top: 1rem;
+      }
+
+      .submit-btn:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 6px 15px rgba(212, 175, 55, 0.3);
+        background: linear-gradient(135deg, #e6c84e, var(--highlight-gold));
+      }
+
+      .submit-btn:disabled {
+        opacity: 0.6;
+        cursor: not-allowed;
+        transform: none;
+      }
+
+      .progress-container {
+        display: none;
+        margin: 1.5rem 0;
+        text-align: center;
+      }
+
+      .progress-container.show {
+        display: block;
+      }
+
+      /* Clock Animation Styles */
+      .clock-container {
+        width: 45px;
+        height: 45px;
+        margin: 0 auto 0.5rem;
+        position: relative;
+      }
+
+      .clock-face {
+        width: 100%;
+        height: 100%;
+        border: 2px solid var(--highlight-gold);
+        border-radius: 50%;
+        position: relative;
+        box-shadow: 0 0 6px rgba(212, 175, 55, 0.15);
+      }
+
+      .clock-hour {
+        width: 2px;
+        height: 11px;
+        top: 11px;
+        left: 50%;
+        background: var(--highlight-gold);
+        position: absolute;
+        transform-origin: bottom center;
+        transform: translateX(-50%) rotate(0deg);
+        z-index: 3;
+        border-radius: 2px;
+        animation: hourRotate 24s linear infinite;
+      }
+
+      .clock-minute {
+        width: 1.5px;
+        height: 16px;
+        top: 6px;
+        left: 50%;
+        background: var(--highlight-gold);
+        position: absolute;
+        transform-origin: bottom center;
+        transform: translateX(-50%) rotate(0deg);
+        z-index: 2;
+        border-radius: 2px;
+        animation: minuteRotate 6s linear infinite;
+      }
+
+      .clock-second {
+        width: 1px;
+        height: 21px;
+        top: 1px;
+        left: 50%;
+        background: var(--highlight-gold);
+        position: absolute;
+        transform-origin: bottom center;
+        transform: translateX(-50%) rotate(0deg);
+        z-index: 1;
+        border-radius: 1.5px;
+        animation: secondRotate 1s linear infinite;
+      }
+
+      .clock-center {
+        width: 5px;
+        height: 5px;
+        background: var(--highlight-gold);
+        border-radius: 50%;
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        z-index: 4;
+      }
+
+      @keyframes hourRotate {
+        from {
+          transform: translateX(-50%) rotate(0deg);
+        }
+        to {
+          transform: translateX(-50%) rotate(360deg);
+        }
+      }
+
+      @keyframes minuteRotate {
+        from {
+          transform: translateX(-50%) rotate(0deg);
+        }
+        to {
+          transform: translateX(-50%) rotate(360deg);
+        }
+      }
+
+      @keyframes secondRotate {
+        from {
+          transform: translateX(-50%) rotate(0deg);
+        }
+        to {
+          transform: translateX(-50%) rotate(360deg);
+        }
+      }
+
+      .progress-percentage {
+        text-align: center;
+        color: var(--highlight-gold);
+        font-size: 1rem;
+        font-weight: 600;
+        margin-bottom: 0.5rem;
+        margin-top: -0.5rem;
+      }
+
+      .progress-text {
+        text-align: center;
+        color: var(--text-secondary);
+        font-size: 0.875rem;
+        margin-bottom: 1rem;
+      }
+
+      .cancel-btn {
+        background: transparent;
+        color: var(--highlight-gold);
+        border: 1px solid var(--highlight-gold);
+        padding: 0.5rem 1rem;
+        border-radius: 25px;
+        font-size: 0.9rem;
+        font-weight: 500;
+        cursor: pointer;
+        transition: all 0.3s ease;
+      }
+
+      .cancel-btn:hover {
+        background: rgba(212, 175, 55, 0.1);
+      }
+
+      .download-popup {
+        display: none;
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0, 0, 0, 0.8);
+        z-index: 2000;
+        justify-content: center;
+        align-items: center;
+      }
+
+      .download-popup.show {
+        display: flex;
+      }
+
+      .download-content {
+        background: var(--bg-accent);
+        padding: 2rem;
+        border-radius: 16px;
+        text-align: center;
+        max-width: 500px;
+        width: 90%;
+        border: 2px solid var(--highlight-gold);
+      }
+
+      .download-text {
+        margin-bottom: 1.5rem;
+        color: var(--text-primary);
+      }
+
+      .download-buttons {
+        display: flex;
+        justify-content: center;
+        gap: 1rem;
+      }
+
+      .download-btn {
+        background: var(--highlight-gold);
+        color: #000000;
+        border: none;
+        padding: 0.75rem 1.5rem;
+        border-radius: 25px;
+        font-size: 1rem;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.3s ease;
+      }
+
+      .download-btn:hover {
+        background: #e6c84e;
+        transform: translateY(-2px);
+      }
+
+      .popup-cancel-btn {
+        background: transparent;
+        color: var(--highlight-gold);
+        border: 1px solid var(--highlight-gold);
+        padding: 0.75rem 1.5rem;
+        border-radius: 25px;
+        font-size: 1rem;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.3s ease;
+      }
+
+      .popup-cancel-btn:hover {
+        background: rgba(212, 175, 55, 0.1);
+      }
+
+      .footer {
+        background: var(--bg-primary);
+        padding: 2rem 1rem;
+        text-align: center;
+        border-top: 2px solid var(--border-color);
+        margin-top: 2rem;
+      }
+
+      .footer p {
+        color: var(--text-secondary);
+        font-size: 0.9rem;
+      }
+
+      @media (max-width: 768px) {
+        .tool-title {
+          font-size: 2rem;
+        }
+
+        .upload-container {
+          margin: 1rem;
+          padding: 1.5rem;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <header class="header">
+      <div class="header-content">
+        <a href="/" class="logo">
+          <div class="logo-icon"></div>
+          <span>NoProfanity</span>
+        </a>
+        <nav class="nav-links">
+          <a href="/" class="nav-link">Home</a>
+          <a href="/tools" class="nav-link">Tools</a>
+          <a href="/contact" class="nav-link">Contact</a>
+          <a href="/help" class="nav-link">Help</a>
+        </nav>
+      </div>
+    </header>
+
+    <main class="main-content">
+      <section class="tool-header">
+        <h1 class="tool-title">Transcribe Audio or Video</h1>
+        <p class="tool-subtitle">
+          Upload an audio or video file. Get a transcript with profane words
+          marked and highlighted for easy identification.
+        </p>
+      </section>
+
+      <div class="upload-container">
+        <h2 class="upload-title">Generate Transcript</h2>
+        <p class="upload-subtitle">
+          Upload your audio or video file and we'll create a detailed transcript
+          with profanity detection.
+        </p>
+
+        <form id="uploadForm" enctype="multipart/form-data">
+          <div class="upload-area" id="uploadArea">
+            <div class="upload-icon">
+              <i class="fas fa-cloud-upload-alt"></i>
+            </div>
+            <p class="upload-instructions">
+              Drag and drop your audio or video file here or click to browse
+            </p>
+            <p
+              style="
+                color: var(--text-secondary);
+                font-size: 0.875rem;
+                margin-top: 1rem;
+              "
+            >
+              Supports MP3, WAV, M4A, AAC, OGG, MP4, AVI, MKV, MOV, WMV, FLV,
+              WebM (Max: 25MB)
+            </p>
+            <input
+              type="file"
+              id="mediaFile"
+              name="video"
+              accept="audio/*,video/*"
+              style="display: none"
+            />
+          </div>
+
+          <div class="file-info" id="fileInfo">
+            <div class="file-name" id="fileName"></div>
+            <div class="file-size" id="fileSize"></div>
+          </div>
+
+          <div class="progress-container" id="progressContainer">
+            <div class="clock-container">
+              <div class="clock-face">
+                <div class="clock-hour"></div>
+                <div class="clock-minute"></div>
+                <div class="clock-second"></div>
+                <div class="clock-center"></div>
+              </div>
+            </div>
+            <div class="progress-percentage" id="progressPercentage">0%</div>
+            <div class="progress-text" id="progressText">Processing...</div>
+            <button type="button" class="cancel-btn" id="cancelBtn">
+              Cancel Process
+            </button>
+          </div>
+
+          <button type="submit" class="submit-btn" id="submitBtn" disabled>
+            <i class="fas fa-file-alt"></i>
+            <span id="submitText">Generate Transcript</span>
+          </button>
+        </form>
+      </div>
+
+      <div class="download-popup" id="downloadPopup">
+        <div class="download-content">
+          <p class="download-text" id="downloadText">
+            Want to download the transcript?
+          </p>
+          <div class="download-buttons">
+            <button class="download-btn" id="confirmDownload">Download</button>
+            <button class="popup-cancel-btn" id="cancelDownload">Cancel</button>
+          </div>
+        </div>
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-content">
+        <p>
+          &copy; 2024 NoProfanity. Professional video audio cleaning technology.
+        </p>
+      </div>
+    </footer>
+
+    <script>
+      // File Upload
+      const uploadArea = document.getElementById("uploadArea");
+      const mediaFile = document.getElementById("mediaFile");
+      const fileInfo = document.getElementById("fileInfo");
+      const fileName = document.getElementById("fileName");
+      const fileSize = document.getElementById("fileSize");
+      const submitBtn = document.getElementById("submitBtn");
+      const progressContainer = document.getElementById("progressContainer");
+      const progressText = document.getElementById("progressText");
+      const progressPercentage = document.getElementById("progressPercentage");
+      const cancelBtn = document.getElementById("cancelBtn");
+      const downloadPopup = document.getElementById("downloadPopup");
+      const downloadText = document.getElementById("downloadText");
+      const confirmDownload = document.getElementById("confirmDownload");
+      const cancelDownload = document.getElementById("cancelDownload");
+
+      let processing = false;
+      let progressInterval;
+      let currentProgress = 0;
+
+      uploadArea.addEventListener("click", () => {
+        mediaFile.click();
+      });
+
+      uploadArea.addEventListener("dragover", (e) => {
+        e.preventDefault();
+        uploadArea.classList.add("dragover");
+      });
+
+      uploadArea.addEventListener("dragleave", () => {
+        uploadArea.classList.remove("dragover");
+      });
+
+      uploadArea.addEventListener("drop", (e) => {
+        e.preventDefault();
+        uploadArea.classList.remove("dragover");
+        const files = e.dataTransfer.files;
+        if (files.length > 0) {
+          handleFile(files[0]);
+        }
+      });
+
+      mediaFile.addEventListener("change", (e) => {
+        if (e.target.files.length > 0) {
+          handleFile(e.target.files[0]);
+        }
+      });
+
+      function handleFile(file) {
+        const maxSize = 25 * 1024 * 1024; // 25MB
+        const allowedExtensions = [
+          ".mp3",
+          ".wav",
+          ".m4a",
+          ".aac",
+          ".ogg",
+          ".mp4",
+          ".avi",
+          ".mkv",
+          ".mov",
+          ".wmv",
+          ".flv",
+          ".webm",
+        ];
+        const fileExtension = "." + file.name.split(".").pop().toLowerCase();
+        if (file.size > maxSize || !allowedExtensions.includes(fileExtension)) {
+          fileName.textContent = "Invalid file.";
+          fileName.style.color = "var(--error-color)";
+          submitBtn.disabled = true;
+          return;
+        }
+        fileName.textContent = file.name;
+        fileSize.textContent = formatFileSize(file.size);
+        fileName.style.color = "var(--success-color)";
+        fileInfo.classList.add("show");
+        submitBtn.disabled = false;
+        const uploadInstructions = document.querySelector(
+          ".upload-instructions"
+        );
+        uploadInstructions.textContent = "File selected successfully!";
+        uploadInstructions.style.color = "var(--success-color)";
+      }
+
+      function formatFileSize(bytes) {
+        if (bytes === 0) return "0 Bytes";
+        const k = 1024;
+        const sizes = ["Bytes", "KB", "MB", "GB"];
+        const i = Math.floor(Math.log(bytes) / Math.log(k));
+        return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + " " + sizes[i];
+      }
+
+      function updateProgress() {
+        currentProgress += Math.random() * 15;
+        if (currentProgress > 90) currentProgress = 90;
+
+        progressPercentage.textContent = `${Math.round(currentProgress)}%`;
+
+        if (currentProgress < 30) {
+          progressText.textContent = "Uploading...";
+        } else if (currentProgress < 60) {
+          progressText.textContent = "Processing...";
+        } else if (currentProgress < 90) {
+          progressText.textContent = "Finalizing...";
+        }
+      }
+
+      function resetForm() {
+        processing = false;
+        currentProgress = 0;
+        clearInterval(progressInterval);
+        progressContainer.classList.remove("show");
+        submitBtn.disabled = false;
+        submitBtn.innerHTML =
+          '<i class="fas fa-file-alt"></i> <span id="submitText">Generate Transcript</span>';
+        fileInfo.classList.remove("show");
+        mediaFile.value = "";
+        const uploadInstructions = document.querySelector(
+          ".upload-instructions"
+        );
+        uploadInstructions.textContent =
+          "Drag and drop your audio or video file here or click to browse";
+        uploadInstructions.style.color = "var(--text-secondary)";
+      }
+
+      // Form Submission
+      const uploadForm = document.getElementById("uploadForm");
+
+      uploadForm.addEventListener("submit", async (e) => {
+        e.preventDefault();
+
+        if (!mediaFile.files.length) {
+          const uploadInstructions = document.querySelector(
+            ".upload-instructions"
+          );
+          uploadInstructions.textContent = "Please upload a file";
+          uploadInstructions.style.color = "var(--error-color)";
+          return;
+        }
+
+        const formData = new FormData(uploadForm);
+        formData.append("option", "transcription");
+
+        processing = true;
+        progressContainer.classList.add("show");
+        submitBtn.disabled = true;
+        submitBtn.innerHTML =
+          '<i class="fas fa-spinner fa-spin"></i> Processing...';
+
+        const uploadInstructions = document.querySelector(
+          ".upload-instructions"
+        );
+        uploadInstructions.textContent = "Processing your file...";
+        uploadInstructions.style.color = "var(--primary-color)";
+
+        progressInterval = setInterval(updateProgress, 500);
+
+        try {
+          const response = await fetch("/process", {
+            method: "POST",
+            body: formData,
+          });
+
+          clearInterval(progressInterval);
+          progressPercentage.textContent = "100%";
+          progressText.textContent = "Done!";
+
+          if (response.ok) {
+            const blob = await response.blob();
+            const url = window.URL.createObjectURL(blob);
+            const filename =
+              "TRANSCRIPT_" +
+              mediaFile.files[0].name.replace(/\.[^/.]+$/, ".txt");
+            downloadText.textContent = `Want to download the ${filename}?`;
+            downloadPopup.classList.add("show");
+            confirmDownload.onclick = function () {
+              const a = document.createElement("a");
+              a.href = url;
+              a.download = filename;
+              document.body.appendChild(a);
+              a.click();
+              document.body.removeChild(a);
+              window.URL.revokeObjectURL(url);
+              downloadPopup.classList.remove("show");
+              resetForm();
+            };
+            cancelDownload.onclick = function () {
+              window.URL.revokeObjectURL(url);
+              downloadPopup.classList.remove("show");
+              resetForm();
+            };
+          } else {
+            const contentType = response.headers.get("content-type");
+            if (contentType && contentType.includes("application/json")) {
+              const errorData = await response.json();
+              alert("Error: " + (errorData.error || "Processing failed"));
+            } else {
+              let errorMessage =
+                "Error: Processing failed with status " + response.status;
+              if (response.status === 502) {
+                errorMessage =
+                  "Error: Server is temporarily unavailable. Please try again in a few minutes.";
+              }
+              alert(errorMessage);
+            }
+            resetForm();
+          }
+        } catch (error) {
+          clearInterval(progressInterval);
+          console.error("Processing error:", error);
+          alert("Error: " + error.message);
+          resetForm();
+        }
+      });
+
+      cancelBtn.addEventListener("click", function () {
+        if (processing) {
+          if (confirm("Are you sure you want to cancel the current process?")) {
+            resetForm();
+          }
+        }
+      });
+
+      // Add blink effect to navigation links
+      document.querySelectorAll(".nav-link").forEach((link) => {
+        link.addEventListener("click", function () {
+          this.classList.add("blink");
+          setTimeout(() => {
+            this.classList.remove("blink");
+          }, 300);
+        });
+      });
+    </script>
+  </body>
+</html>
