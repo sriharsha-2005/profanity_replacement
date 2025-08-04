@@ -1,0 +1,13 @@
+badword,badword_pos,replacement_word,replacement_word_type
+oralsex,noun,intimacy,literal
+ass,noun,backside,literal
+bastard,noun,jerk,literal
+bitch,noun,mean person,literal
+bullshit,noun,nonsense,literal
+chink,noun,person,neutral
+cunt,noun,rude person,contextual
+motherfucker,verb,terrible person,literal
+nigger,verb,person,neutral
+shit,noun,crap,euphemism
+slut,noun,promiscuous person,literal
+whore,noun,sex worker,literal

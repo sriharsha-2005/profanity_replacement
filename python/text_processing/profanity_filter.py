@@ -1,15 +1,48 @@
 from typing import List, Dict, Any
 import re
+import csv
+import os
 
-PROFANITY_MAP = {
-    # Single words
-    r'\basshole\b': "jerk",
-    r'\bshit\b': "crap",
-    r'\bjeans\b': "hello",
-    # Multi-word phrases
-    r'\bmother\s?fucker\b': "awesome person",
-    r'\bt\s?shirt\b': "shirt"
-}
+# Load replacements from CSV file
+def load_profanity_replacements():
+    """Load profanity replacements from CSV file"""
+    replacements = {}
+    
+    # Try to load from CSV
+    csv_path = 'validated_profanity_replacements.csv'
+    
+    if os.path.exists(csv_path):
+        try:
+            with open(csv_path, 'r', encoding='utf-8') as file:
+                reader = csv.DictReader(file, delimiter='\t')
+                for row in reader:
+                    badword = row.get('badword', '').strip().lower()
+                    replacement = row.get('replacement_word', '').strip()
+                    if badword and replacement:
+                        # Create regex pattern for word boundaries
+                        pattern = r'\b' + re.escape(badword) + r'\b'
+                        replacements[pattern] = replacement
+            print(f"Loaded {len(replacements)} replacements from {csv_path}")
+        except Exception as e:
+            print(f"Error loading {csv_path}: {e}")
+    
+    # Always add test cases
+    test_replacements = {
+        r'\bjeans\b': "pants",
+        r'\bshit\b': "crap",
+        r'\basshole\b': "jerk",
+        r'\bmother\s?fucker\b': "awesome person"
+    }
+    
+    # Merge test replacements with CSV replacements
+    for pattern, replacement in test_replacements.items():
+        if pattern not in replacements:
+            replacements[pattern] = replacement
+    
+    return replacements
+
+# Load the profanity map
+PROFANITY_MAP = load_profanity_replacements()
 
 def filter_transcript(transcript: List[Dict[str, Any]]) -> List[Dict[str, Any]]:
     replacements = []
@@ -71,3 +104,24 @@ def filter_transcript(transcript: List[Dict[str, Any]]) -> List[Dict[str, Any]]:
                 filtered_replacements.append(repl)
     
     return filtered_replacements
+
+def test_profanity_filter():
+    """Test the profanity filter with sample text"""
+    test_transcript = [
+        {"word": "I", "start": 0.0, "end": 0.5},
+        {"word": "love", "start": 0.5, "end": 1.0},
+        {"word": "my", "start": 1.0, "end": 1.5},
+        {"word": "jeans", "start": 1.5, "end": 2.0},
+        {"word": "and", "start": 2.0, "end": 2.5},
+        {"word": "shit", "start": 2.5, "end": 3.0}
+    ]
+    
+    replacements = filter_transcript(test_transcript)
+    print("Test Results:")
+    for repl in replacements:
+        print(f"'{repl['original']}' -> '{repl['replacement']}' (time: {repl['start']}-{repl['end']})")
+    
+    return replacements
+
+if __name__ == "__main__":
+    test_profanity_filter()
