@@ -1,0 +1,794 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>NoProfanity - Professional Video Audio Cleaning</title>
+    <link
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"
+      rel="stylesheet"
+    />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      :root {
+        /* Changed colors as specified */
+        --bg-primary: #000000;
+        --bg-secondary: #000000;
+        --bg-accent: #000000;
+        --text-primary: #ffffff;
+        --text-secondary: #ffffff;
+        --text-accent: #d4af37;
+        --border-color: #000000; /* Removed nav border line */
+        --shadow: 0 4px 20px rgba(212, 175, 55, 0.15); /* 50% intensity */
+        --primary-color: #d4af37;
+        --secondary-color: #000000;
+        --accent-color: #d4af37;
+        --warning-color: #d4af37;
+        --error-color: #d4af37;
+        --success-color: #d4af37;
+        --surface-color: #000000;
+        --surface-tonal: #000000;
+        --highlight-gold: #d4af37;
+        --highlight-navy: #000000;
+        --highlight-green: #d4af37;
+        --navy-blue: #000000;
+        --gold-text-glow: rgba(212, 175, 55, 0.075); /* 50% intensity */
+      }
+
+      /* Rest of the CSS remains exactly the same */
+      body {
+        opacity: 0;
+        animation: fadeIn 0.5s ease-in forwards;
+      }
+
+      @keyframes fadeIn {
+        to {
+          opacity: 1;
+        }
+      }
+
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      body {
+        font-family: "Inter", sans-serif;
+        background: #000000;
+        color: var(--text-primary);
+        min-height: 100vh;
+        line-height: 1.6;
+        overflow-x: hidden;
+      }
+
+      /* Increased nav bar height by 50% */
+      .header {
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        background: rgba(0, 0, 0, 0.95);
+        backdrop-filter: blur(20px);
+        border-bottom: 2px solid var(--border-color);
+        z-index: 1000;
+        transition: all 0.3s ease;
+        box-shadow: 0 2px 20px rgba(212, 175, 55, 0.15);
+        height: 90px; /* Increased from ~60px */
+      }
+
+      .header-content {
+        max-width: 1400px;
+        margin: 0 auto;
+        padding: 1.5rem 3rem; /* Increased padding for taller nav */
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        height: 100%;
+      }
+
+      /* Modified gold hover effect */
+      .logo,
+      .hero-title,
+      .section-title,
+      .feature-title {
+        position: relative;
+      }
+
+      .logo::after,
+      .hero-title::after,
+      .section-title::after,
+      .feature-title::after {
+        content: "";
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        width: 100%;
+        height: 100%;
+        background: var(--gold-text-glow);
+        transform: translate(-50%, -50%);
+        border-radius: 50%;
+        filter: blur(15px);
+        z-index: -1;
+        opacity: 0.35; /* Reduced intensity */
+      }
+
+      .logo {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        font-size: 1.5rem;
+        font-weight: 700;
+        color: var(--highlight-gold);
+        text-decoration: none;
+        font-family: "Inter", sans-serif;
+        text-shadow: 0 0 10px rgba(212, 175, 55, 0.25); /* 50% intensity */
+      }
+
+      .logo-icon {
+        width: 40px;
+        height: 40px;
+        background: var(--highlight-gold);
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        position: relative;
+        overflow: hidden;
+        box-shadow: 0 0 20px rgba(212, 175, 55, 0.3); /* 50% intensity */
+        border: 2px solid var(--highlight-gold);
+        animation: glow 2s ease-in-out infinite alternate;
+      }
+
+      @keyframes glow {
+        from {
+          box-shadow: 0 0 20px rgba(212, 175, 55, 0.3);
+        }
+        to {
+          box-shadow: 0 0 30px rgba(212, 175, 55, 0.4);
+        }
+      }
+
+      .logo-icon::before {
+        content: "S"; /* Changed from NP to S */
+        font-size: 1rem;
+        font-weight: 700;
+        color: #000000;
+        z-index: 2;
+        position: relative;
+        font-family: "Inter", sans-serif;
+        letter-spacing: -0.5px;
+      }
+
+      /* Mobile Menu - unchanged except colors */
+      .mobile-menu-btn {
+        display: none;
+        background: none;
+        border: none;
+        color: var(--highlight-gold);
+        font-size: 1.5rem;
+        cursor: pointer;
+        padding: 0.5rem;
+        transition: all 0.3s ease;
+      }
+
+      .mobile-menu-btn:hover {
+        color: var(--text-primary);
+        transform: scale(1.1);
+      }
+
+      .nav-links {
+        display: flex;
+        align-items: center;
+        gap: 2rem;
+        transition: all 0.3s ease;
+      }
+
+      .nav-link {
+        color: var(--text-secondary);
+        text-decoration: none;
+        font-weight: 500;
+        transition: all 0.3s ease;
+        position: relative;
+        cursor: pointer;
+        font-size: 1rem;
+        padding: 0.5rem 1rem;
+        border-radius: 8px;
+      }
+
+      /* Changed hover effect - removed box, kept line and text */
+      .nav-link:hover {
+        color: #e6c04a; /* Brightened gold */
+        background: transparent; /* Changed from rgba(212, 175, 55, 0.1) */
+        transform: translateY(-2px);
+      }
+
+      .nav-link::after {
+        content: "";
+        position: absolute;
+        bottom: 0;
+        left: 50%;
+        width: 0;
+        height: 2px;
+        background: #e6c04a; /* Brightened gold */
+        transition: all 0.3s ease;
+        transform: translateX(-50%);
+      }
+
+      .nav-link:hover::after {
+        width: 80%;
+      }
+
+      .nav-link.blink {
+        animation: blink 0.3s ease-in-out;
+      }
+
+      @keyframes blink {
+        0% {
+          opacity: 1;
+        }
+        50% {
+          opacity: 0.5;
+        }
+        100% {
+          opacity: 1;
+        }
+      }
+
+      .user-controls {
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+      }
+
+      .login-btn {
+        color: var(--text-primary);
+        text-decoration: none;
+        font-weight: 500;
+        transition: all 0.3s ease;
+        font-size: 1rem;
+        padding: 0.5rem 1rem;
+        border-radius: 8px;
+        border: 1px solid var(--border-color);
+      }
+
+      .login-btn:hover {
+        color: #e6c04a; /* Brightened gold */
+        border-color: #e6c04a; /* Brightened gold */
+        background: rgba(212, 175, 55, 0.1);
+        transform: translateY(-2px);
+      }
+
+      .signup-btn {
+        background: linear-gradient(
+          135deg,
+          #d4af37,
+          #e6c04a
+        ); /* Brightened gold */
+        color: #000000;
+        padding: 0.5rem 1.5rem;
+        border-radius: 25px;
+        text-decoration: none;
+        font-weight: 600;
+        transition: all 0.3s ease;
+        border: none;
+        cursor: pointer;
+        font-size: 1rem;
+        box-shadow: 0 4px 15px rgba(212, 175, 55, 0.15); /* 50% intensity */
+      }
+
+      .signup-btn:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 6px 20px rgba(212, 175, 55, 0.25); /* 50% intensity */
+        background: linear-gradient(
+          135deg,
+          #e6c04a,
+          #d4af37
+        ); /* Brightened gold */
+      }
+
+      /* Main Content - unchanged except colors */
+      .main-content {
+        padding-top: 90px; /* Adjusted for taller nav */
+        min-height: 100vh;
+      }
+
+      /* Hero Section - unchanged except colors */
+      .hero-section {
+        text-align: center;
+        padding: 4rem 1rem 3rem;
+        background: linear-gradient(135deg, #000000, #000000);
+        position: relative;
+        overflow: hidden;
+      }
+
+      .hero-section::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: radial-gradient(
+          circle at 50% 50%,
+          rgba(212, 175, 55, 0.05) 0%,
+          /* 50% intensity */ transparent 70%
+        );
+        pointer-events: none;
+      }
+
+      .hero-title {
+        font-size: 3.5rem;
+        font-weight: 700;
+        margin-bottom: 1.5rem;
+        color: var(--highlight-gold);
+        line-height: 1.1;
+        font-family: "Inter", sans-serif;
+        letter-spacing: -0.02em;
+        text-shadow: 0 0 30px rgba(212, 175, 55, 0.25); /* 50% intensity */
+        animation: goldPulse 4s ease-in-out infinite alternate;
+      }
+
+      @keyframes goldPulse {
+        0% {
+          text-shadow: 0 0 20px rgba(212, 175, 55, 0.15); /* 50% intensity */
+        }
+        100% {
+          text-shadow: 0 0 40px rgba(212, 175, 55, 0.25); /* 50% intensity */
+        }
+      }
+
+      @keyframes titleGlow {
+        from {
+          text-shadow: 0 0 30px rgba(212, 175, 55, 0.15); /* 50% intensity */
+        }
+        to {
+          text-shadow: 0 0 50px rgba(212, 175, 55, 0.25); /* 50% intensity */
+        }
+      }
+
+      .hero-subtitle {
+        font-size: 1.25rem;
+        color: var(--text-secondary);
+        max-width: 700px;
+        margin: 0 auto 3rem;
+        font-weight: 400;
+        line-height: 1.8;
+      }
+
+      .hero-buttons {
+        display: flex;
+        gap: 1.5rem;
+        justify-content: center;
+        flex-wrap: wrap;
+        margin-top: 2rem;
+      }
+
+      .hero-btn {
+        padding: 1rem 2rem;
+        border-radius: 30px;
+        font-weight: 600;
+        text-decoration: none;
+        transition: all 0.3s ease;
+        font-size: 1.1rem;
+        position: relative;
+        overflow: hidden;
+      }
+
+      .hero-btn.primary {
+        background: linear-gradient(
+          135deg,
+          #d4af37,
+          #e6c04a
+        ); /* Brightened gold */
+        color: #000000;
+        border: 2px solid #d4af37;
+        box-shadow: 0 4px 20px rgba(212, 175, 55, 0.15); /* 50% intensity */
+      }
+
+      .hero-btn.primary:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 6px 30px rgba(212, 175, 55, 0.25); /* 50% intensity */
+        background: linear-gradient(
+          135deg,
+          #e6c04a,
+          #d4af37
+        ); /* Brightened gold */
+      }
+
+      .hero-btn.secondary {
+        background: transparent;
+        color: var(--text-primary);
+        border: 2px solid #000000; /* Removed border */
+      }
+
+      .hero-btn.secondary:hover {
+        background: rgba(212, 175, 55, 0.1);
+        border-color: #d4af37;
+        color: #e6c04a; /* Brightened gold */
+        transform: translateY(-3px);
+      }
+
+      /* Features Section - unchanged except colors */
+      .features-section {
+        padding: 4rem 1rem;
+        background: var(--bg-secondary);
+      }
+
+      .section-title {
+        text-align: center;
+        font-size: 2.5rem;
+        font-weight: 700;
+        color: var(--highlight-gold);
+        margin-bottom: 3rem;
+        text-shadow: 0 0 20px rgba(212, 175, 55, 0.15); /* 50% intensity */
+      }
+
+      .features-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+        gap: 2rem;
+        max-width: 1200px;
+        margin: 0 auto;
+      }
+
+      /* Added feature link styling */
+      .feature-link {
+        text-decoration: none;
+        color: inherit;
+      }
+
+      .feature-card {
+        background: var(--bg-accent);
+        border: 2px solid #000000; /* Removed border */
+        border-radius: 16px;
+        padding: 2rem;
+        text-align: center;
+        transition: all 0.3s ease;
+        position: relative;
+        overflow: hidden;
+        cursor: pointer;
+      }
+
+      .feature-card::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: -100%;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(
+          90deg,
+          transparent,
+          rgba(212, 175, 55, 0.05),
+          /* 50% intensity */ transparent
+        );
+        transition: left 0.5s ease;
+      }
+
+      .feature-card:hover::before {
+        left: 100%;
+      }
+
+      .feature-link:hover .feature-card {
+        transform: translateY(-10px);
+        border-color: #d4af37;
+        box-shadow: 0 10px 30px rgba(212, 175, 55, 0.1); /* 50% intensity */
+      }
+
+      .feature-icon {
+        font-size: 3rem;
+        color: var(--highlight-gold);
+        margin-bottom: 1.5rem;
+        text-shadow: 0 0 20px rgba(212, 175, 55, 0.25); /* 50% intensity */
+      }
+
+      .feature-title {
+        font-size: 1.5rem;
+        font-weight: 600;
+        color: var(--text-primary);
+        margin-bottom: 1rem;
+      }
+
+      .feature-description {
+        color: var(--text-secondary);
+        line-height: 1.6;
+      }
+
+      /* Footer - unchanged except colors */
+      .footer {
+        background: var(--bg-primary);
+        padding: 2rem 1rem;
+        text-align: center;
+        border-top: 2px solid #000000; /* Removed border */
+        margin-top: 2rem;
+      }
+
+      .footer-content {
+        max-width: 1200px;
+        margin: 0 auto;
+      }
+
+      .footer p {
+        color: var(--text-secondary);
+        font-size: 0.9rem;
+      }
+
+      /* Responsive Design - unchanged */
+      @media (max-width: 768px) {
+        .header-content {
+          padding: 1.5rem 1.5rem; /* Adjusted for taller mobile nav */
+        }
+
+        .nav-links {
+          display: none;
+        }
+
+        .mobile-menu-btn {
+          display: block;
+        }
+
+        .user-controls {
+          gap: 0.5rem;
+        }
+
+        .login-btn {
+          display: none;
+        }
+
+        .signup-btn {
+          padding: 0.5rem 1rem;
+          font-size: 0.9rem;
+        }
+
+        .hero-title {
+          font-size: 2.5rem;
+        }
+
+        .hero-subtitle {
+          font-size: 1.1rem;
+        }
+
+        .hero-buttons {
+          flex-direction: column;
+          align-items: center;
+        }
+
+        .section-title {
+          font-size: 2rem;
+        }
+
+        .features-grid {
+          grid-template-columns: 1fr;
+        }
+      }
+
+      @media (max-width: 480px) {
+        .hero-title {
+          font-size: 2rem;
+        }
+
+        .hero-subtitle {
+          font-size: 1rem;
+        }
+
+        .feature-card {
+          padding: 1.5rem;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <header class="header">
+      <div class="header-content">
+        <a href="/" class="logo">
+          <div class="logo-icon"></div>
+          <span>NoProfanity</span>
+        </a>
+        <nav class="nav-links">
+          <a href="/" class="nav-link">Home</a>
+          <a href="/tools" class="nav-link">Tools</a>
+          <a href="/contact" class="nav-link">Contact</a>
+          <a href="/help" class="nav-link">Help</a>
+        </nav>
+        <div class="user-controls">
+          <a href="/login" class="login-btn">Log in</a>
+          <a href="/signup" class="signup-btn">Sign up</a>
+        </div>
+        <button class="mobile-menu-btn">
+          <i class="fas fa-bars"></i>
+        </button>
+      </div>
+    </header>
+
+    <main class="main-content">
+      <!-- Hero Section -->
+      <section class="hero-section">
+        <h1 class="hero-title">Professional Video Audio Cleaning</h1>
+        <p class="hero-subtitle">
+          Transform your videos with AI-powered profanity detection and seamless
+          natural voice replacement. Clean up your content while maintaining
+          professional quality.
+        </p>
+        <div class="hero-buttons">
+          <a href="/tools" class="hero-btn primary">
+            <i class="fas fa-tools"></i>
+            Get Started
+          </a>
+          <a href="/help" class="hero-btn secondary">
+            <i class="fas fa-question-circle"></i>
+            Learn More
+          </a>
+        </div>
+      </section>
+
+      <!-- Features Section -->
+      <section class="features-section">
+        <h2 class="section-title">Features</h2>
+        <!-- Changed from "Powerful Features" -->
+        <div class="features-grid">
+          <!-- ===== FEATURE CARDS NOW CLICKABLE - REPLACE # LINKS BELOW ===== -->
+          <a href="#" class="feature-link">
+            <!-- Replace # with actual link -->
+            <div class="feature-card">
+              <div class="feature-icon">
+                <i class="fas fa-video"></i>
+              </div>
+              <h3 class="feature-title">Video Audio Cleaning</h3>
+              <p class="feature-description">
+                Automatically detect and replace profanity in videos with
+                natural-sounding alternatives while preserving video quality.
+              </p>
+            </div>
+          </a>
+
+          <a href="http://127.0.0.1:5000/tools" class="feature-link">
+            <!-- Replace # with actual link -->
+            <div class="feature-card">
+              <div class="feature-icon">
+                <i class="fas fa-music"></i>
+              </div>
+              <h3 class="feature-title">Audio Extraction</h3>
+              <p class="feature-description">
+                Extract high-quality audio from videos in multiple formats with
+                our advanced audio processing technology.
+              </p>
+            </div>
+          </a>
+
+          <a href="http://127.0.0.1:5000/tools" class="feature-link">
+            <!-- Replace # with actual link -->
+            <div class="feature-card">
+              <div class="feature-icon">
+                <i class="fas fa-microphone"></i>
+              </div>
+              <h3 class="feature-title">Audio Cleaning</h3>
+              <p class="feature-description">
+                Clean up audio files by removing unwanted content and replacing
+                with natural voice alternatives.
+              </p>
+            </div>
+          </a>
+
+          <a href="http://127.0.0.1:5000/tools" class="feature-link">
+            <!-- Replace # with actual link -->
+            <div class="feature-card">
+              <div class="feature-icon">
+                <i class="fas fa-layer-group"></i>
+              </div>
+              <h3 class="feature-title">Video & Audio Merge</h3>
+              <p class="feature-description">
+                Combine cleaned audio with original video to create
+                professional-quality content seamlessly.
+              </p>
+            </div>
+          </a>
+
+          <a href="http://127.0.0.1:5000/tools" class="feature-link">
+            <!-- Replace # with actual link -->
+            <div class="feature-card">
+              <div class="feature-icon">
+                <i class="fas fa-shield-alt"></i>
+              </div>
+              <h3 class="feature-title">Secure Processing</h3>
+              <p class="feature-description">
+                Your content is processed locally with enterprise-grade security
+                and privacy protection.
+              </p>
+            </div>
+          </a>
+
+          <a href="http://127.0.0.1:5000/tools" class="feature-link">
+            <!-- Replace # with actual link -->
+            <div class="feature-card">
+              <div class="feature-icon">
+                <i class="fas fa-rocket"></i>
+              </div>
+              <h3 class="feature-title">Fast & Efficient</h3>
+              <p class="feature-description">
+                Optimized processing pipeline ensures quick results without
+                compromising on quality or accuracy.
+              </p>
+            </div>
+          </a>
+        </div>
+      </section>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-content">
+        <p>
+          &copy; 2024 NoProfanity. Professional video audio cleaning technology.
+        </p>
+      </div>
+    </footer>
+
+    <script>
+      // Mobile menu toggle
+      document
+        .querySelector(".mobile-menu-btn")
+        .addEventListener("click", function () {
+          const navLinks = document.querySelector(".nav-links");
+          const userControls = document.querySelector(".user-controls");
+
+          if (window.innerWidth <= 768) {
+            if (navLinks.style.display === "flex") {
+              navLinks.style.display = "none";
+              userControls.style.display = "flex";
+            } else {
+              navLinks.style.display = "flex";
+              navLinks.style.flexDirection = "column";
+              navLinks.style.position = "absolute";
+              navLinks.style.top = "100%";
+              navLinks.style.left = "0";
+              navLinks.style.right = "0";
+              navLinks.style.background = "rgba(0, 0, 0, 0.95)";
+              navLinks.style.backdropFilter = "blur(20px)";
+              navLinks.style.borderTop =
+                "2px solid #000000"; /* Removed border */
+              navLinks.style.padding = "1rem";
+              navLinks.style.gap = "1rem";
+              userControls.style.display = "none";
+            }
+          }
+        });
+
+      // Smooth scrolling for anchor links
+      document.querySelectorAll('a[href^="#"]').forEach((anchor) => {
+        anchor.addEventListener("click", function (e) {
+          e.preventDefault();
+          document.querySelector(this.getAttribute("href")).scrollIntoView({
+            behavior: "smooth",
+          });
+        });
+      });
+
+      // Add scroll effect to header
+      window.addEventListener("scroll", function () {
+        const header = document.querySelector(".header");
+        if (window.scrollY > 50) {
+          header.style.background = "rgba(0, 0, 0, 0.98)";
+          header.style.boxShadow =
+            "0 2px 30px rgba(212, 175, 55, 0.2)"; /* 50% intensity */
+        } else {
+          header.style.background = "rgba(0, 0, 0, 0.95)";
+          header.style.boxShadow =
+            "0 2px 20px rgba(212, 175, 55, 0.15)"; /* 50% intensity */
+        }
+      });
+
+      // Add blink effect to navigation links
+      document.querySelectorAll(".nav-link").forEach((link) => {
+        link.addEventListener("click", function () {
+          this.classList.add("blink");
+          setTimeout(() => {
+            this.classList.remove("blink");
+          }, 300);
+        });
+      });
+    </script>
+  </body>
+</html>

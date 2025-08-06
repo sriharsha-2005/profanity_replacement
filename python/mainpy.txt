@@ -1,0 +1,224 @@
+import argparse
+import json
+import logging
+import os
+import subprocess
+import sys
+from typing import Dict, Any
+
+from audio_processing.whisper_handler import transcriber
+from audio_processing.edge_tts_handler import generate_speech
+from text_processing.profanity_filter import filter_transcript
+from utils.file_utils import create_dir_if_not_exists
+
+# Configure logging
+logging.basicConfig(level=logging.INFO)
+logger = logging.getLogger(__name__)
+
+def extract_audio(video_path: str, audio_path: str) -> None:
+    """Extract audio from video using ffmpeg."""
+    if not os.path.exists(video_path):
+        raise FileNotFoundError(f"Video file not found: {video_path}")
+
+    command = [
+        "ffmpeg", "-i", video_path,
+        "-vn", "-acodec", "pcm_s16le",
+        "-ar", "44100", "-ac", "2",
+        audio_path
+    ]
+    try:
+        subprocess.run(command, check=True, capture_output=True)
+        logger.info(f"Extracted audio to {audio_path}")
+    except subprocess.CalledProcessError as e:
+        logger.error(f"FFmpeg failed: {e.stderr.decode()}")
+        raise RuntimeError("Audio extraction failed")
+
+def process_video(
+    video_path: str,
+    output_dir: str,
+    voice_gender: str = "female",
+    language: str = None
+) -> Dict[str, Any]:
+    """Pipeline: Video → Audio → Transcript → Filtered Audio."""
+    create_dir_if_not_exists(output_dir)
+    
+    # Step 1: Extract audio
+    audio_path = os.path.join(output_dir, "extracted.wav")
+    extract_audio(video_path, audio_path)
+
+    # Step 2: Transcribe
+    transcript = transcriber.transcribe_audio(audio_path, language=language)
+
+    # Step 3: Filter profanity
+    profane_segments = filter_transcript(transcript) or []
+
+    # Step 4: Generate replacement audio
+    for idx, entry in enumerate(profane_segments):
+        out_path = os.path.join(output_dir, f"replacement_{idx}.mp3")
+        generate_speech(entry["replacement"], out_path, voice_gender)
+        entry["replacement_audio"] = out_path
+
+    return {
+        "transcript": transcript,
+        "profane_segments": profane_segments
+    }
+
+if __name__ == "__main__":
+    parser = argparse.ArgumentParser(
+        description="Process a video to censor profanity with replacement audio."
+    )
+    parser.add_argument("video_path", help="Input video file path")
+    parser.add_argument("output_dir", help="Output directory path")
+    parser.add_argument("--gender", choices=["male", "female"], default="female")
+    parser.add_argument("--language", help="Force language (e.g., 'en')", default=None)
+    args = parser.parse_args()
+
+    try:
+        result = process_video(
+            args.video_path,
+            args.output_dir,
+            voice_gender=args.gender,
+            language=args.language
+        )
+        print(json.dumps(result, indent=2))
+        logger.info(f"Output saved to: {os.path.abspath(args.output_dir)}")
+    except Exception as e:
+        logger.error(f"Processing failed: {e}")
+        sys.exit(1) 
+
+
+
+
+
+..best one below and last one also
+
+
+
+
+
+import argparse
+import json
+import logging
+import os
+import subprocess
+import sys
+from typing import Dict, Any, List
+
+from audio_processing.whisper_handler import transcriber
+from audio_processing.edge_tts_handler import generate_speech
+from audio_processing.audio_replacer import replace_profanity_audio  # New import
+from text_processing.profanity_filter import filter_transcript
+from utils.file_utils import create_dir_if_not_exists
+
+# Configure logging
+logging.basicConfig(level=logging.INFO)
+logger = logging.getLogger(__name__)
+
+def extract_audio(video_path: str, audio_path: str) -> None:
+    """Extract audio from video using ffmpeg."""
+    if not os.path.exists(video_path):
+        raise FileNotFoundError(f"Video file not found: {video_path}")
+
+    command = [
+        "ffmpeg", "-i", video_path,
+        "-vn", "-acodec", "pcm_s16le",
+        "-ar", "44100", "-ac", "2",
+        audio_path
+    ]
+    try:
+        subprocess.run(command, check=True, capture_output=True)
+        logger.info(f"Extracted audio to {audio_path}")
+    except subprocess.CalledProcessError as e:
+        logger.error(f"FFmpeg failed: {e.stderr.decode()}")
+        raise RuntimeError("Audio extraction failed")
+
+def create_final_video(
+    original_video: str,
+    clean_audio: str,
+    output_path: str
+) -> None:
+    """Combine censored audio with original video"""
+    command = [
+        "ffmpeg",
+        "-i", original_video,
+        "-i", clean_audio,
+        "-c:v", "copy",
+        "-map", "0:v:0",
+        "-map", "1:a:0",
+        "-shortest",
+        output_path
+    ]
+    try:
+        subprocess.run(command, check=True)
+        logger.info(f"Created final video: {output_path}")
+    except subprocess.CalledProcessError as e:
+        logger.error(f"Video creation failed: {e.stderr.decode()}")
+        raise RuntimeError("Final video creation failed")
+
+def process_video(
+    video_path: str,
+    output_dir: str,
+    voice_gender: str = "female",
+    language: str = None
+) -> Dict[str, Any]:
+    """Pipeline: Video → Audio → Transcript → Filtered Audio → Final Video."""
+    create_dir_if_not_exists(output_dir)
+    
+    # Step 1: Extract audio
+    audio_path = os.path.join(output_dir, "extracted.wav")
+    extract_audio(video_path, audio_path)
+
+    # Step 2: Transcribe
+    transcript = transcriber.transcribe_audio(audio_path, language=language)
+
+    # Step 3: Filter profanity
+    profane_segments = filter_transcript(transcript) or []
+
+    # Step 4: Generate replacement audio
+    for idx, entry in enumerate(profane_segments):
+        out_path = os.path.join(output_dir, f"replacement_{idx}.mp3")
+        generate_speech(entry["replacement"], out_path, voice_gender)
+        entry["replacement_audio"] = out_path
+
+    # Step 5: Create censored audio
+    censored_audio = os.path.join(output_dir, "censored_audio.wav")
+    replace_profanity_audio(
+        original_audio=audio_path,
+        replacements=profane_segments,
+        output_file=censored_audio,
+        temp_dir=os.path.join(output_dir, "temp_audio")
+    )
+
+    # Step 6: Create final video
+    final_video = os.path.join(output_dir, "CLEAN_" + os.path.basename(video_path))
+    create_final_video(video_path, censored_audio, final_video)
+
+    return {
+        "transcript": transcript,
+        "profane_segments": profane_segments,
+        "final_video": final_video,
+        "censored_audio": censored_audio
+    }
+
+if __name__ == "__main__":
+    parser = argparse.ArgumentParser(
+        description="Process a video to censor profanity with replacement audio."
+    )
+    parser.add_argument("video_path", help="Input video file path")
+    parser.add_argument("output_dir", help="Output directory path")
+    parser.add_argument("--gender", choices=["male", "female"], default="female")
+    parser.add_argument("--language", help="Force language (e.g., 'en')", default=None)
+    args = parser.parse_args()
+
+    try:
+        result = process_video(
+            args.video_path,
+            args.output_dir,
+            voice_gender=args.gender,
+            language=args.language
+        )
+        print(json.dumps(result, indent=2))
+        logger.info(f"Final video saved to: {result['final_video']}")
+    except Exception as e:
+        logger.error(f"Processing failed: {e}")
+        sys.exit(1)

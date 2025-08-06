@@ -1,0 +1,395 @@
+import csv
+from typing import Dict, Tuple
+
+# Comprehensive replacement dictionary
+REPLACEMENT_DB = {
+    # Anger/Frustration
+    "damn": ("darn", "euphemism"),
+    "hell": ("heck", "euphemism"),
+    "shit": ("crap", "euphemism"),
+    "piss off": ("annoy", "literal"),
+    
+    # Vulgarity
+    "ass": ("backside", "literal"),
+    "slut": ("promiscuous person", "literal"),
+    "whore": ("sex worker", "literal"),
+    "dick": ("jerk", "contextual"),
+    "cunt": ("rude person", "contextual"),
+    
+    # Nonsense
+    "bullshit": ("nonsense", "literal"),
+    
+    # Sexual terms
+    "oralsex": ("intimacy", "literal"),
+    "orgasm": ("climax", "literal"),
+    "ejaculating": ("releasing", "literal"),
+    
+    # Insults
+    "bastard": ("jerk", "literal"),
+    "bitch": ("mean person", "literal"),
+    "motherfucker": ("terrible person", "literal"),
+    
+    # Racial slurs
+    "nigger": ("person", "neutral"),
+    "chink": ("person", "neutral"),
+    
+    # Additional words from your data
+    "arse": ("rear", "literal"),
+    "arsehole": ("rude person", "literal"),
+    "asshole": ("person", "literal"),
+    "bollocks": ("nonsense", "literal"),
+    "bugger": ("person", "literal"),
+    "cock": ("rooster", "literal"),
+    "pussy": ("cat", "literal"),
+    "twat": ("person", "literal"),
+    "wanker": ("person", "literal"),
+    
+    # New words from your selection
+    "fukker": ("person", "literal"),
+    "fukkers": ("people", "literal"),
+    "fukking": ("action", "literal"),
+    "fukkings": ("actions", "literal"),
+    "fukkuh": ("person", "literal"),
+    "fuks": ("things", "literal"),
+    "fuku": ("person", "literal"),
+    "fukwhore": ("person", "literal"),
+    "fukwit": ("person", "literal"),
+    "fullofshit": ("nonsense", "literal"),
+    "funbags": ("things", "literal"),
+    "fuq": ("thing", "literal"),
+    "futhamucka": ("person", "literal"),
+    "fux": ("thing", "literal"),
+    "fux0r": ("thing", "literal"),
+    "fvck": ("thing", "literal"),
+    "fvcka": ("thing", "literal"),
+    "fvckbunny": ("person", "literal"),
+    "fvcker": ("person", "literal"),
+    "fvckers": ("people", "literal"),
+    "fvckin": ("thing", "literal"),
+    "fvcking": ("action", "literal"),
+    "fvckkerbunny": ("person", "literal"),
+    "fvckwhi": ("thing", "literal"),
+    "fvckyou": ("phrase", "literal"),
+    "fxck": ("thing", "literal"),
+    "fxcked": ("action", "literal"),
+    "fxcker": ("person", "literal"),
+    "fxcking": ("action", "literal"),
+    "g0ddamn": ("darn", "euphemism"),
+    "g0ddamned": ("darned", "euphemism"),
+    "g0ddamnit": ("darnit", "euphemism"),
+    "gashstabber": ("person", "literal"),
+    "gayass": ("person", "literal"),
+    "gaybitch": ("person", "literal"),
+    "gayest": ("person", "literal"),
+    "gayfuck": ("thing", "literal"),
+    "gayfucker": ("person", "literal"),
+    "gaylord": ("person", "literal"),
+    "gaylords": ("people", "literal"),
+    "gayness": ("quality", "literal"),
+    "gayshit": ("nonsense", "literal"),
+    "gaysian": ("person", "literal"),
+    "gaytard": ("person", "literal"),
+    "gaywad": ("person", "literal"),
+    "geebag": ("person", "literal"),
+    "getfucked": ("action", "literal"),
+    "ginjockey": ("person", "literal"),
+    "girlieboy": ("person", "literal"),
+    "girlybits": ("things", "literal"),
+    "girlyboy": ("person", "literal"),
+    "gobshite": ("nonsense", "literal"),
+    "godamnit": ("darnit", "euphemism"),
+    "goddam": ("darn", "euphemism"),
+    "goddammit": ("darnit", "euphemism"),
+    "goddamn": ("darn", "euphemism"),
+    "goddamned": ("darned", "euphemism"),
+    "goddamnit": ("darnit", "euphemism"),
+    "goddamnmothafuckers": ("people", "literal"),
+    "goddamnsonofabitch": ("person", "literal"),
+    "goddmnit": ("darnit", "euphemism"),
+    "gofuckyourself": ("phrase", "literal"),
+    "gook": ("person", "neutral"),
+    "gotohell": ("phrase", "literal"),
+    "gowl": ("person", "literal"),
+    "greaser": ("person", "literal"),
+    "groid": ("person", "neutral"),
+    "groper": ("person", "literal"),
+    "gyb1tch": ("person", "literal"),
+    "gylord": ("person", "literal"),
+    "gyp": ("person", "neutral"),
+    "gyshit": ("nonsense", "literal"),
+    "harrypalms": ("person", "literal"),
+    "heeb": ("person", "neutral"),
+    "higg": ("person", "neutral"),
+    "higg3r": ("person", "neutral"),
+    "higga": ("person", "neutral"),
+    "higger": ("person", "neutral"),
+    "higgers": ("people", "neutral"),
+    "hoar": ("person", "literal"),
+    "hoe": ("person", "literal"),
+    "hoeasses": ("people", "literal"),
+    "hoebag": ("person", "literal"),
+    "hoes": ("people", "literal"),
+    "holyfuck": ("phrase", "literal"),
+    "homo": ("person", "literal"),
+    "homoasses": ("people", "literal"),
+    "homos": ("people", "literal"),
+    "hooters": ("things", "literal"),
+    "horsesasses": ("people", "literal"),
+    "horseshit": ("nonsense", "literal"),
+    "hustler": ("person", "literal"),
+    "injun": ("person", "neutral"),
+    "j3rk": ("person", "literal"),
+    "ja1lbait": ("person", "literal"),
+    "jackarse": ("person", "literal"),
+    "jackass": ("person", "literal"),
+    "jackasses": ("people", "literal"),
+    "jackasss": ("person", "literal"),
+    "jackoff": ("person", "literal"),
+    "jackoffs": ("people", "literal"),
+    "jackoffz": ("people", "literal"),
+    "jagoff": ("person", "literal"),
+    "jailbait": ("person", "literal"),
+    "jailbat": ("person", "literal"),
+    "jalbait": ("person", "literal"),
+    "jap": ("person", "neutral"),
+    "jerk0ff": ("person", "literal"),
+    "jerk0ffs": ("people", "literal"),
+    "jerkingoff": ("action", "literal"),
+    "jerkoff": ("person", "literal"),
+    "jerkoffjerkingoff": ("action", "literal"),
+    "jerkoffs": ("people", "literal"),
+    "jerksoff": ("people", "literal"),
+    "jewboy": ("person", "neutral"),
+    "jigaboo": ("person", "neutral"),
+    "jigaboos": ("people", "neutral"),
+    "jigga": ("person", "neutral"),
+    "jiggaboo": ("person", "neutral"),
+    "jiggabooboo": ("person", "neutral"),
+    "jiggaboos": ("people", "neutral"),
+    "jiggabu": ("person", "neutral"),
+    "jiggas": ("people", "neutral"),
+    "jigger": ("person", "neutral"),
+    "jiggerboo": ("person", "neutral"),
+    "jiggerboos": ("people", "neutral"),
+    "jiggs": ("people", "neutral"),
+    "jiggyboo": ("person", "neutral"),
+    "jigro": ("person", "neutral"),
+    "jimcrow": ("person", "neutral"),
+    "jizz": ("thing", "literal"),
+    "jizzbags": ("things", "literal"),
+    "jizzeater": ("person", "literal"),
+    "jizzed": ("action", "literal"),
+    "jizzes": ("things", "literal"),
+    "jizzfucker": ("person", "literal"),
+    "jizzing": ("action", "literal"),
+    "jizzjockey": ("person", "literal"),
+    "jizzlicker": ("person", "literal"),
+    "jizzsacks": ("things", "literal"),
+    "jizzstain": ("thing", "literal"),
+    "jizzy": ("thing", "literal"),
+    "joffs": ("people", "literal"),
+}
+
+# Spelling corrections
+CORRECT_SPELLING = {
+    "0ralsex": "oralsex",
+    "0rgasm": "orgasm", 
+    "3jaculating": "ejaculating",
+    "4rse": "arse",
+    "5hit": "shit",
+    "fukker": "fucker",
+    "fukkers": "fuckers",
+    "fukking": "fucking",
+    "fukkings": "fuckings",
+    "fukkuh": "fucker",
+    "fuks": "fucks",
+    "fuku": "fucker",
+    "fukwhore": "fuckwhore",
+    "fukwit": "fuckwit",
+    "fux": "fuck",
+    "fux0r": "fucker",
+    "fvck": "fuck",
+    "fvcka": "fucker",
+    "fvckbunny": "fuckbunny",
+    "fvcker": "fucker",
+    "fvckers": "fuckers",
+    "fvckin": "fucking",
+    "fvcking": "fucking",
+    "fvckkerbunny": "fuckbunny",
+    "fvckwhi": "fuckyou",
+    "fvckyou": "fuckyou",
+    "fxck": "fuck",
+    "fxcked": "fucked",
+    "fxcker": "fucker",
+    "fxcking": "fucking",
+    "g0ddamn": "goddamn",
+    "g0ddamned": "goddamned",
+    "g0ddamnit": "goddamnit",
+    "gashstabber": "gashstabber",
+    "gayass": "gayass",
+    "gaybitch": "gaybitch",
+    "gayest": "gayest",
+    "gayfuck": "gayfuck",
+    "gayfucker": "gayfucker",
+    "gaylord": "gaylord",
+    "gaylords": "gaylords",
+    "gayness": "gayness",
+    "gayshit": "gayshit",
+    "gaysian": "gaysian",
+    "gaytard": "gaytard",
+    "gaywad": "gaywad",
+    "geebag": "geebag",
+    "getfucked": "getfucked",
+    "ginjockey": "ginjockey",
+    "girlieboy": "girlieboy",
+    "girlybits": "girlybits",
+    "girlyboy": "girlyboy",
+    "gobshite": "gobshite",
+    "godamnit": "goddamnit",
+    "goddam": "goddamn",
+    "goddammit": "goddammit",
+    "goddamn": "goddamn",
+    "goddamned": "goddamned",
+    "goddamnit": "goddamnit",
+    "goddamnmothafuckers": "goddamnmothafuckers",
+    "goddamnsonofabitch": "goddamnsonofabitch",
+    "goddmnit": "goddamnit",
+    "gofuckyourself": "gofuckyourself",
+    "gook": "gook",
+    "gotohell": "gotohell",
+    "gowl": "gowl",
+    "greaser": "greaser",
+    "groid": "groid",
+    "groper": "groper",
+    "gyb1tch": "gybitch",
+    "gylord": "gylord",
+    "gyp": "gyp",
+    "gyshit": "gyshit",
+    "harrypalms": "harrypalms",
+    "heeb": "heeb",
+    "higg": "higger",
+    "higg3r": "higger",
+    "higga": "higger",
+    "higger": "higger",
+    "higgers": "higgers",
+    "hoar": "hoar",
+    "hoe": "hoe",
+    "hoeasses": "hoeasses",
+    "hoebag": "hoebag",
+    "hoes": "hoes",
+    "holyfuck": "holyfuck",
+    "homo": "homo",
+    "homoasses": "homoasses",
+    "homos": "homos",
+    "hooters": "hooters",
+    "horsesasses": "horsesasses",
+    "horseshit": "horseshit",
+    "hustler": "hustler",
+    "injun": "injun",
+    "j3rk": "jerk",
+    "ja1lbait": "jailbait",
+    "jackarse": "jackarse",
+    "jackass": "jackass",
+    "jackasses": "jackasses",
+    "jackasss": "jackass",
+    "jackoff": "jackoff",
+    "jackoffs": "jackoffs",
+    "jackoffz": "jackoffs",
+    "jagoff": "jagoff",
+    "jailbait": "jailbait",
+    "jailbat": "jailbait",
+    "jalbait": "jailbait",
+    "jap": "jap",
+    "jerk0ff": "jerkoff",
+    "jerk0ffs": "jerkoffs",
+    "jerkingoff": "jerkingoff",
+    "jerkoff": "jerkoff",
+    "jerkoffjerkingoff": "jerkoffjerkingoff",
+    "jerkoffs": "jerkoffs",
+    "jerksoff": "jerksoff",
+    "jewboy": "jewboy",
+    "jigaboo": "jigaboo",
+    "jigaboos": "jigaboos",
+    "jigga": "jigga",
+    "jiggaboo": "jiggaboo",
+    "jiggabooboo": "jiggabooboo",
+    "jiggaboos": "jiggaboos",
+    "jiggabu": "jiggaboo",
+    "jiggas": "jiggas",
+    "jigger": "jigger",
+    "jiggerboo": "jiggerboo",
+    "jiggerboos": "jiggerboos",
+    "jiggs": "jiggs",
+    "jiggyboo": "jiggyboo",
+    "jigro": "jigro",
+    "jimcrow": "jimcrow",
+    "jizz": "jizz",
+    "jizzbags": "jizzbags",
+    "jizzeater": "jizzeater",
+    "jizzed": "jizzed",
+    "jizzes": "jizzes",
+    "jizzfucker": "jizzfucker",
+    "jizzing": "jizzing",
+    "jizzjockey": "jizzjockey",
+    "jizzlicker": "jizzlicker",
+    "jizzsacks": "jizzsacks",
+    "jizzstain": "jizzstain",
+    "jizzy": "jizzy",
+    "joffs": "joffs",
+}
+
+def correct_spelling(word: str) -> str:
+    return CORRECT_SPELLING.get(word.lower(), word.lower())
+
+def get_replacement(word: str, word_type: str) -> Tuple[str, str]:
+    word = correct_spelling(word)
+    if word not in REPLACEMENT_DB:
+        # Default replacements for unknown words
+        if word_type == "noun":
+            return ("person", "literal")
+        elif word_type == "verb":
+            return ("action", "literal")
+        else:
+            return ("thing", "literal")
+    
+    replacement, replacement_type = REPLACEMENT_DB[word]
+    if replacement == "contextual":
+        if word_type == "noun":
+            return ("person", "neutral")
+        elif word_type == "verb":
+            return ("action", "neutral")
+        else:
+            return ("thing", "neutral")
+    return (replacement, replacement_type)
+
+def update_validated_file():
+    """Update validated_profanity_replacements.csv with all columns filled"""
+    with open('validated_profanity_replacements.csv', 'r', encoding='utf-8') as infile, \
+         open('validated_profanity_replacements_updated.csv', 'w', newline='', encoding='utf-8') as outfile:
+        
+        reader = csv.DictReader(infile)
+        writer = csv.DictWriter(outfile, fieldnames=['badword', 'badwordpos', 'replacdementword', 'replacementwordtype'])
+        writer.writeheader()
+        
+        for row in reader:
+            badword = row['badword'].strip()
+            badwordpos = row['badwordtype'].strip()
+            replacdementword = row['replacement_word'].strip()
+            replacementwordtype = row['replacement_wordtype'].strip()
+            
+            # If replacement columns are empty, fill them
+            if not replacdementword or not replacementwordtype:
+                replacement, replacement_type = get_replacement(badword, badwordpos)
+                replacdementword = replacement
+                replacementwordtype = replacement_type
+            
+            writer.writerow({
+                'badword': badword,
+                'badwordpos': badwordpos,
+                'replacdementword': replacdementword,
+                'replacementwordtype': replacementwordtype
+            })
+
+if __name__ == "__main__":
+    update_validated_file()
+    print("Updated validated_profanity_replacements_updated.csv with all columns filled") 
